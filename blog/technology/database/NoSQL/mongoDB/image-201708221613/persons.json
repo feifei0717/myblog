@@ -1,0 +1,98 @@
+var persons = 
+[{
+	name:"jim",
+	age:25,
+	email:"75431457@qq.com",
+	c:89,m:96,e:87,
+	country:"USA",
+	books:["JS","C++","EXTJS","MONGODB"]
+},
+{
+	name:"tom",
+	age:25,
+	email:"214557457@qq.com",
+	c:75,m:66,e:97,
+	country:"USA",
+	books:["PHP","JAVA","EXTJS","C++"]
+},
+{
+	name:"lili",
+	age:26,
+	email:"344521457@qq.com",
+	c:75,m:63,e:97,
+	country:"USA",
+	books:["JS","JAVA","C#","MONGODB"]
+},
+{
+	name:"zhangsan",
+	age:27,
+	email:"2145567457@qq.com",
+	c:89,m:86,e:67,
+	country:"China",
+	books:["JS","JAVA","EXTJS","MONGODB"]
+},
+{
+	name:"lisi",
+	age:26,
+	email:"274521457@qq.com",
+	c:53,m:96,e:83,
+	country:"China",
+	books:["JS","C#","PHP","MONGODB"]
+},
+{
+	name:"wangwu",
+	age:27,
+	email:"65621457@qq.com",
+	c:45,m:65,e:99,
+	country:"China",
+	books:["JS","JAVA","C++","MONGODB"]
+},
+{
+	name:"zhaoliu",
+	age:27,
+	email:"214521457@qq.com",
+	c:99,m:96,e:97,
+	country:"China",
+	books:["JS","JAVA","EXTJS","PHP"]
+},
+{
+	name:"piaoyingjun",
+	age:26,
+	email:"piaoyingjun@uspcat.com",
+	c:39,m:54,e:53,
+	country:"Korea",
+	books:["JS","C#","EXTJS","MONGODB"]
+},
+{
+	name:"lizhenxian",
+	age:27,
+	email:"lizhenxian@uspcat.com",
+	c:35,m:56,e:47,
+	country:"Korea",
+	books:["JS","JAVA","EXTJS","MONGODB"]
+},
+{
+	name:"lixiaoli",
+	age:21,
+	email:"lixiaoli@uspcat.com",
+	c:36,m:86,e:32,
+	country:"Korea",
+	books:["JS","JAVA","PHP","MONGODB"]
+},
+{
+	name:"zhangsuying",
+	age:22,
+	email:"zhangsuying@uspcat.com",
+	c:45,m:63,e:77,
+	country:"Korea",
+	books:["JS","JAVA","C#","MONGODB"]
+}]
+for(var i = 0;i<persons.length;i++){
+	db.persons.insert(persons[i])
+}
+var persons = db.persons.find({name:"jim"})
+while(persons.hasNext()){
+	obj = persons.next();
+        print(obj.books.length)
+} 
+

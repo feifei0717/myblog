@@ -1,0 +1,11 @@
+var jim = [{
+	school :"K",
+	score:"A"
+},{
+	school :"L",
+	score:"B"
+},{
+	school :"J",
+	score:"A+"
+}]
+db.persons.update({name:"jim"},{$set:{school:jim}})

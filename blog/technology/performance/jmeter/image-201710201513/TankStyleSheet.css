@@ -1,0 +1,51 @@
+#div_digg
+{
+    position: fixed;
+    bottom: 0px;
+    right: -20px;
+    padding: 8px 8px 8px 10px;
+    background-color: #fff;
+    border: 1px solid #D9DBE1;
+}
+#tank_h1
+{
+    background-color: #A5A5A5;
+}
+#tank2_h1
+{
+    background-color: #A5A5A5;
+}
+#tank_table
+{
+    background-color: #C0C0C0;
+    border-collapse: separate;
+    font-size: 14px;
+}
+#tank_table td
+{
+    background-color: #fff;
+    padding: 3px;
+    border-collapse: separate;
+}
+#tank_table thead td
+{
+    background-color: #D8D8D8;
+    color: #105CB6
+}
+
+#tank_ref_title
+{
+    color:#ff0000;
+    font-size:24px;
+}
+
+#tank_hidden
+{
+    display:none;
+}
+
+#tank_mianshi_hidden
+{
+
+}
+

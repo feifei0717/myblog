@@ -1,0 +1,1 @@
+docker镜像地址 /Users/{YourUserName}/Library/Containers/com.docker.docker/Datadocker安装地址 就是/Applications。打开 Mac应用程序就看到docker的图标了

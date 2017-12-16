@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://www.powerxing.com/install-hadoop-in-centos/ -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hadoop安装教程_单机/伪分布式配置_CentOS6.4/Hadoop2.6.0_给力星</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" id="yarppWidgetCss-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/widget.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/bootstrap.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="power-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="google-code-prettify-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/prettify.css" type="text/css" media="all">
+<script src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/hm.js"></script><script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/jquery.min.js"></script><style type="text/css" abt="234"></style>
+<link rel="https://api.w.org/" href="http://www.powerxing.com/wp-json/">
+<link rel="prev" title="使用Maven编译运行Storm入门代码(Storm starter)" href="http://www.powerxing.com/build-storm-starter-with-maven/">
+<link rel="next" title="我的2016校招" href="http://www.powerxing.com/campus-recruitment/">
+<link rel="canonical" href="http://www.powerxing.com/install-hadoop-in-centos/">
+<link rel="alternate" type="application/json+oembed" href="http://www.powerxing.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.powerxing.com%2Finstall-hadoop-in-centos%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://www.powerxing.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.powerxing.com%2Finstall-hadoop-in-centos%2F&amp;format=xml">
+<!--[if lt IE 9]>
+<script src="http://www.powerxing.com/wp-content/themes/power/js/html5shiv.js"></script>
+<![endif]-->
+<script>//console.log('a')
+</script><script>doAdblock();
+function doAdblock(){
+    (function() {
+        function A() {}
+        A.prototype = {
+            rules: {
+                'pps_pps': {
+                    'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/pps_flvplay_s\.swf/,
+                    'replace': 'http://swf.adtchrome.com/pps_20140420.swf'
+                },
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if (/http:\/\/v.youku.com\/v_show\/.*/.test(window.location.href)){
+                    var tag = document.getElementById("playerBox").getAttribute("player")
+                    if (tag == "adt"){
+                        console.log("adt adv")
+                        return;
+                    }
+                }
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+// 20140730
+(function cnbeta() {
+    if (document.URL.indexOf('cnbeta.com') >= 0) {
+        var elms = document.body.querySelectorAll("p>embed");
+        Array.prototype.forEach.call(elms, function(elm) {
+            elm.style.marginLeft = "0px";
+        });
+    }
+})();
+//baidu
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var aa = function(){
+            var all = document.body.querySelectorAll("#content_left div,#content_left table");
+            for(var i = 0; i < all.length; i++){
+                if(/display:\s?(table|block)\s!important/.test(all[i].getAttribute("style"))){all[i].style.display= "none";all[i].style.visibility='hidden';}
+            }
+            all = document.body.querySelectorAll('.result.c-container[id="1"]');
+            //if(all.length == 1) return;
+            for(var i = 0; i < all.length; i++){
+                if(all[i].innerHTML && all[i].innerHTML.indexOf('广告')>-1){
+                    all[i].style.display= "none";all[i].style.visibility='hidden';
+                }
+            }
+        }
+        aa();
+        document.getElementById('wrapper_wrapper').addEventListener('DOMSubtreeModified',aa)
+    };
+}
+// 20140922
+(function kill_360() {
+    if (document.URL.indexOf('so.com') >= 0) {
+        document.getElementById("e_idea_pp").style.display = none;
+    }
+})();
+if (document.URL.indexOf("tv.sohu.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+if (document.URL.indexOf("56.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+if (document.URL.indexOf("iqiyi.com") >= 0){
+    if (document.cookie.indexOf("player_forcedType=h5_VOD")==-1){
+        document.cookie='player_forcedType=h5_VOD'
+        if(localStorage.reloadTime && Date.now() - parseInt(localStorage.reloadTime)<60000){
+            console.log('no reload')
+        }else{
+            location.reload()
+            localStorage.reloadTime = Date.now();
+        }
+    }
+}
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style></head>
+
+<body class="single single-post postid-272 single-format-standard">
+<div class="container site-page">
+
+<div class="row">
+	<div class="col-sm-3 site-infos">
+		<div class="site-avator"></div>
+		<h4 class="site-title">
+			<a href="http://www.powerxing.com/" title="给力星" rel="home">给力星</a>
+		</h4>
+		<div class="site-description">Web Developer</div>
+
+		<nav class="main-navigation" role="navigation">
+			<div class="menu-primary-container"><ul id="menu-primary" class="menu menu-level-1"><li id="menu-item-11" class="menu-item item-level-1"><a href="http://www.powerxing.com/">首页</a></li>
+<li id="menu-item-15" class="menu-item item-level-1 current-path"><a href="http://www.powerxing.com/notes/">笔记</a></li>
+<li id="menu-item-16" class="menu-item item-level-1"><a href="http://www.powerxing.com/articles/">搜藏</a></li>
+<li id="menu-item-17" class="menu-item item-level-1"><a href="http://www.powerxing.com/snippets/">代码</a></li>
+<li id="menu-item-170" class="menu-item item-level-1"><a href="http://www.powerxing.com/music/">音乐</a></li>
+<li id="menu-item-168" class="menu-item item-level-1"><a href="http://www.powerxing.com/about/">关于</a></li>
+</ul></div>		</nav><!-- #site-navigation -->
+
+		<div class="search"><form role="search" method="get" class="search-form" action="http://www.powerxing.com/">
+				<label>
+					<span class="screen-reader-text">搜索：</span>
+					<input type="search" class="search-field" placeholder="搜索…" value="" name="s">
+				</label>
+				<input type="submit" class="search-submit" value="搜索">
+			</form></div>
+	</div>
+	<div class="col-sm-9 site-main">
+
+					<article id="post-272" class="post-272 post type-post status-publish format-standard has-post-thumbnail hentry category-notes tag-centos tag-hadoop">
+	<header class="entry-header">
+		<h1 class="entry-title">Hadoop安装教程_单机/伪分布式配置_CentOS6.4/Hadoop2.6.0</h1>
+
+		<div class="entry-meta">
+			<span class="date"><i class="fa fa-calendar"></i> <time datetime="2015-12-17T17:27:37+00:00">2015-12-17</time> <span class="updated">(updated: <time class="updated" datetime="2017-03-02T22:47:14+00:00">2017-03-02</time>)</span></span><span class="views" id="views"><i class="fa fa-eye"></i> 72757</span><span class="comments"><i class="fa fa-comments-o"></i> 55</span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>本教程适合于在 CentOS 6.x 系统中安装原生 Hadoop 2，适用于Hadoop 2.7.1,  Hadoop 2.6.0 等版本，主要参考了<a href="http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank">官方安装教程</a>，步骤详细，辅以适当说明，<strong>相信按照步骤来，都能顺利在 CentOS 中安装并运行 Hadoop</strong>。本 Hadoop 教程由<a href="http://www.powerxing.com/" target="_blank">给力星</a>出品，转载请注明。</p>
+<p><span id="more-272"></span></p>
+<h2>环境</h2>
+<p>本教程使用 <strong>CentOS 6.4 32位</strong> 作为系统环境，请自行安装系统。如果用的是 Ubuntu 系统，请查看相应的 <a href="http://www.powerxing.com/install-hadoop/" target="_blank">Ubuntu安装Hadoop教程</a>。</p>
+<p>本教程基于原生 Hadoop 2，在 <strong>Hadoop 2.6.0 (stable)</strong> 版本下验证通过，可适合任何 Hadoop 2.x.y 版本，例如 Hadoop 2.7.1, Hadoop 2.4.1等。</p>
+<div class="callout callout-info"><em class="callout-title">Hadoop版本</em><p>Hadoop 有两个主要版本，Hadoop 1.x.y 和 Hadoop 2.x.y 系列，比较老的教材上用的可能是 0.20 这样的版本。Hadoop 2.x 版本在不断更新，本教程均可适用。如果需安装 0.20，1.2.1这样的版本，本教程也可以作为参考，主要差别在于配置项，配置请参考官网教程或其他教程。</p>
+<p>新版是兼容旧版的，书上旧版本的代码应该能够正常运行（我自己没验证，欢迎验证反馈）。</p>
+</div>
+<p>装好了 CentOS 系统之后，在安装 Hadoop 前还需要做一些必备工作。</p>
+<h2>创建hadoop用户</h2>
+<p>如果你安装 CentOS 的时候不是用的 “hadoop” 用户，那么需要增加一个名为 hadoop 的用户。</p>
+<p>首先点击左上角的 “应用程序” -&gt; “系统工具” -&gt; “终端”，首先在终端中输入 <code>su</code> ，按回车，输入 root 密码以 root 用户登录，接着执行命令创建新用户 hadoop:</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">su              </span><span class="com"># 上述提到的以 root 用户登录</span></li><li class="L1"><span class="kwd">useradd </span><span class="pln">-m hadoop -s /bin/bash   </span><span class="com"># 创建新用户hadoop</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>如下图所示，这条命令创建了可以登陆的 hadoop 用户，并使用 /bin/bash 作为shell。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-01-craete-user.png" alt="CentOS创建hadoop用户" title=""><span class="img-caption">CentOS创建hadoop用户</span></p>
+<p>接着使用如下命令修改密码，按提示输入两次密码，可简单的设为 “hadoop”（密码随意指定，若提示“无效的密码，过于简单”则再次输入确认就行）:</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">passwd </span><span class="pln">hadoop</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>可为 hadoop 用户增加管理员权限，方便部署，避免一些对新手来说比较棘手的权限问题，执行：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">visudo</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>如下图，找到 <code>root   ALL=(ALL)    ALL</code> 这行（应该在第98行，可以先按一下键盘上的 <code>ESC</code> 键，然后输入 <code>:98</code> (按一下冒号，接着输入98，再按回车键)，可以直接跳到第98行 ），然后在这行下面增加一行内容：<code>hadoop   ALL=(ALL)   ALL</code> （当中的间隔为tab），如下图所示：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-02-add-sudo.png" alt="为hadoop增加sudo权限" title=""><span class="img-caption">为hadoop增加sudo权限</span></p>
+<p>添加好内容后，先按一下键盘上的 <code>ESC</code> 键，然后输入 <code>:wq</code> (输入冒号还有wq，这是vi/vim编辑器的保存方法)，再按回车键保存退出就可以了。</p>
+<p>最后注销当前用户(点击屏幕右上角的用户名，选择退出-&gt;注销)，在登陆界面使用刚创建的 hadoop 用户进行登陆。（如果已经是 hadoop 用户，且在终端中使用 <code>su</code> 登录了 root 用户，那么需要执行 <code>exit</code> 退出 root 用户状态）</p>
+<h2>准备工作</h2>
+<p>使用 hadoop 用户登录后，还需要安装几个软件才能安装 Hadoop。</p>
+<p>CentOS 使用 yum 来安装软件，需要联网环境，首先应检查一下是否连上了网络。如下图所示，桌面右上角的网络图标若显示红叉，则表明还未联网，应点击选择可用网络。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-04-connect-to-net.png" alt="检查是否联网" title=""><span class="img-caption">检查是否联网</span></p>
+<p>连接网络后，需要安装 SSH 和 Java。</p>
+<h2>安装SSH、配置SSH无密码登陆</h2>
+<p>集群、单节点模式都需要用到 SSH 登陆（类似于远程登陆，你可以登录某台 Linux 主机，并且在上面运行命令），一般情况下，CentOS 默认已安装了 SSH client、SSH server，打开终端执行如下命令进行检验：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">rpm -qa | grep ssh</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>如果返回的结果如下图所示，包含了 SSH client 跟 SSH server，则不需要再安装。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-03-install-ssh.png" alt="检查是否安装了SSH" title=""><span class="img-caption">检查是否安装了SSH</span></p>
+<p>若需要安装，则可以通过 yum 进行安装（安装过程中会让你输入 [y/N]，输入 y 即可）：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">sudo </span><span class="pln">yum install openssh-clients</span></li><li class="L1"><span class="kwd">sudo </span><span class="pln">yum install openssh-server</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>接着执行如下命令测试一下 SSH 是否可用：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">ssh </span><span class="pln">localhost</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>此时会有如下提示(SSH首次登陆提示)，输入 yes 。然后按提示输入密码 hadoop，这样就登陆到本机了。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-05-ssh-localhost.png" alt="测试SSH是否可用" title=""><span class="img-caption">测试SSH是否可用</span></p>
+<p>但这样登陆是需要每次输入密码的，我们需要配置成SSH无密码登陆比较方便。</p>
+<p>首先输入 <code>exit</code> 退出刚才的 ssh，就回到了我们原先的终端窗口，然后利用 ssh-keygen 生成密钥，并将密钥加入到授权中：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">exit                           </span><span class="com"># 退出刚才的 ssh localhost</span></li><li class="L1"><span class="kwd">cd </span><span class="pln">~/.ssh/                     </span><span class="com"># 若没有该目录，请先执行一次ssh localhost</span></li><li class="L2"><span class="pln">ssh-keygen -t rsa              </span><span class="com"># 会有提示，都按回车就可以</span></li><li class="L3"><span class="kwd">cat </span><span class="pln">id_rsa.pub &gt;&gt; authorized_keys  </span><span class="com"># 加入授权</span></li><li class="L4"><span class="kwd">chmod </span><span class="pln">600 ./authorized_keys    </span><span class="com"># 修改文件权限</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<div class="callout callout-note"><em class="callout-title">~的含义</em><p>在 Linux 系统中，~ 代表的是用户的主文件夹，即 “/home/用户名” 这个目录，如你的用户名为 hadoop，则 ~ 就代表 “/home/hadoop/”。 此外，命令中的 # 后面的文字是注释。</p></div>
+<p>此时再用 <code>ssh localhost</code> 命令，无需输入密码就可以直接登陆了，如下图所示。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-08-ssh-no-password.png" alt="SSH无密码登录" title=""><span class="img-caption">SSH无密码登录</span></p>
+<h2>安装Java环境</h2>
+<p>Java 环境可选择 Oracle 的 JDK，或是 OpenJDK，现在一般 Linux 系统默认安装的基本是 OpenJDK，如 CentOS 6.4 就默认安装了 OpenJDK 1.7。按 <a href="http://wiki.apache.org/hadoop/HadoopJavaVersions" target="_blank">http://wiki.apache.org/hadoop/HadoopJavaVersions</a> 中说的，Hadoop 在 OpenJDK 1.7 下运行是没问题的。需要注意的是，CentOS 6.4 中默认安装的只是 Java JRE，而不是 JDK，为了开发方便，我们还是需要通过 yum 进行安装 JDK，安装过程中会让输入 [y/N]，输入 y 即可：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">sudo </span><span class="pln">yum install java-1.7.0-openjdk java-1.7.0-openjdk-devel</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+
+<p>通过上述命令安装 OpenJDK，默认安装位置为 /usr/lib/jvm/java-1.7.0-openjdk（该路径可以通过执行 <code>rpm -ql java-1.7.0-openjdk-devel | grep '/bin/javac'</code> 命令确定，执行后会输出一个路径，除去路径末尾的 “/bin/javac”，剩下的就是正确的路径了）。OpenJDK 安装后就可以直接使用 java、javac 等命令了。</p>
+<p>接着需要配置一下 JAVA_HOME 环境变量，为方便，我们在 ~/.bashrc 中进行设置（扩展阅读: <a href="http://www.powerxing.com/linux-environment-variable/" target="_blank">设置Linux环境变量的方法和区别</a>）：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">vim </span><span class="pln">~/.bashrc</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>在文件最后面添加如下单独一行（指向 JDK 的安装位置），并保存：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-shell prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">export </span><span class="pln">JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>如下图所示：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-10-set-java-home.png" alt="设置JAVA_HOME环境变量" title=""><span class="img-caption">设置JAVA_HOME环境变量</span></p>
+<p>接着还需要让该环境变量生效，执行如下代码：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">source </span><span class="pln">~/.bashrc    </span><span class="com"># 使变量设置生效</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>设置好后我们来检验一下是否设置正确：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">echo </span><span class="pln">$JAVA_HOME     </span><span class="com"># 检验变量值</span></li><li class="L1"><span class="pln">java -version</span></li><li class="L2"><span class="pln">$JAVA_HOME/bin/java -version  </span><span class="com"># 与直接执行 java -version 一样</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>如果设置正确的话，<code>$JAVA_HOME/bin/java -version</code> 会输出 java 的版本信息，且和 <code>java -version</code> 的输出结果一样，如下图所示：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-11-echo-java-home.png" alt="成功设置JAVA_HOME环境变量" title=""><span class="img-caption">成功设置JAVA_HOME环境变量</span></p>
+<p>这样，Hadoop 所需的 Java 运行环境就安装好了。</p>
+<h2>安装 Hadoop 2</h2>
+<p>Hadoop 2 可以通过 <a href="http://mirror.bit.edu.cn/apache/hadoop/common/" target="_blank">http://mirror.bit.edu.cn/apache/hadoop/common/</a> 或者 <a href="http://mirrors.cnnic.cn/apache/hadoop/common/" target="_blank">http://mirrors.cnnic.cn/apache/hadoop/common/</a> 下载，本教程选择的是 2.6.0 版本，下载时请下载 <strong>hadoop-2.x.y.tar.gz</strong> 这个格式的文件，这是编译好的，另一个包含 src 的则是 Hadoop 源代码，需要进行编译才可使用。</p>
+<p>下载时强烈建议也下载 <strong>hadoop-2.x.y.tar.gz.mds</strong> 这个文件，该文件包含了检验值可用于检查 hadoop-2.x.y.tar.gz 的完整性，否则若文件发生了损坏或下载不完整，Hadoop 将无法正常运行。</p>
+<p>本文涉及的文件均通过浏览器下载，默认保存在 “下载” 目录中（若不是请自行更改 tar 命令的相应目录）。另外，如果你用的不是 2.6.0 版本，则将所有命令中出现的 2.6.0 更改为你所使用的版本。</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">cat </span><span class="pln">~/下载/hadoop-2.6.0.tar.gz.mds | grep </span><span class="str">'MD5'</span><span class="pln"> </span><span class="com"># 列出md5检验值</span></li><li class="L1"><span class="com"># head -n 6 ~/下载/hadoop-2.7.1.tar.gz.mds # 2.7.1版本格式变了，可以用这种方式输出</span></li><li class="L2"><span class="pln">md5sum ~/下载/hadoop-2.6.0.tar.gz | tr </span><span class="str">"a-z"</span><span class="pln"> </span><span class="str">"A-Z"</span><span class="pln"> </span><span class="com"># 计算md5值，并转化为大写，方便比较</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>若文件不完整则这两个值一般差别很大，可以简单对比下前几个字符跟后几个字符是否相等即可，如下图所示，如果两个值不一样，请务必重新下载。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-12-md5.png" alt="检验文件完整性" title=""><span class="img-caption">检验文件完整性</span></p>
+<p>我们选择将 Hadoop 安装至 /usr/local/ 中：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">sudo tar </span><span class="pln">-zxf ~/下载/hadoop-2.6.0.tar.gz -C /usr/local    </span><span class="com"># 解压到/usr/local中</span></li><li class="L1"><span class="kwd">cd </span><span class="pln">/usr/local/</span></li><li class="L2"><span class="kwd">sudo mv </span><span class="pln">./hadoop-2.6.0/ ./hadoop            </span><span class="com"># 将文件夹名改为hadoop</span></li><li class="L3"><span class="kwd">sudo chown </span><span class="pln">-R hadoop:hadoop ./hadoop        </span><span class="com"># 修改文件权限</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>Hadoop 解压后即可使用。输入如下命令来检查 Hadoop 是否可用，成功则会显示 Hadoop 版本信息：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">cd </span><span class="pln">/usr/local/hadoop</span></li><li class="L1"><span class="pln">./bin/hadoop version</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<div class="callout callout-note"><strong class="callout-title">相对路径与绝对路径的区别</strong><p>请务必注意命令中的相对路径与绝对路径，本文后续出现的 <code>./bin/...</code>，<code>./etc/...</code> 等包含 ./ 的路径，均为相对路径，以 /usr/local/hadoop 为当前目录。例如在 /usr/local/hadoop 目录中执行 <code>./bin/hadoop version</code> 等同于执行 <code>/usr/local/hadoop/bin/hadoop version</code>。可以将相对路径改成绝对路径来执行，但如果你是在主文件夹 ~ 中执行 <code>./bin/hadoop version</code>，执行的会是 <code>/home/hadoop/bin/hadoop version</code>，就不是我们所想要的了。</p></div>
+<h2>Hadoop单机配置(非分布式)</h2>
+<p>Hadoop 默认模式为非分布式模式，无需进行其他配置即可运行。非分布式即单 Java 进程，方便进行调试。</p>
+<p>现在我们可以执行例子来感受下 Hadoop 的运行。Hadoop 附带了丰富的例子（运行 <code>./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-2.6.0.jar</code> 可以看到所有例子），包括 wordcount、terasort、join、grep 等。</p>
+<p>在此我们选择运行 grep 例子，我们将 input 文件夹中的所有文件作为输入，筛选当中符合正则表达式 <code>dfs[a-z.]+</code> 的单词并统计出现的次数，最后输出结果到 output 文件夹中。</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">cd </span><span class="pln">/usr/local/hadoop</span></li><li class="L1"><span class="kwd">mkdir </span><span class="pln">./input</span></li><li class="L2"><span class="kwd">cp </span><span class="pln">./etc/hadoop/*.xml ./input   </span><span class="com"># 将配置文件作为输入文件</span></li><li class="L3"><span class="pln">./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar grep ./input ./output </span><span class="str">'dfs[a-z.]+'</span></li><li class="L4"><span class="kwd">cat </span><span class="pln">./output/*          </span><span class="com"># 查看运行结果</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>若运行出错，如出现如下图提示：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-13-hostname.png" alt="运行Hadoop实例时可能会报错" title=""><span class="img-caption">运行Hadoop实例时可能会报错</span></p>
+<p>若出现提示 “WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform… using builtin-java classes where applicable”，该 WARN 提示可以忽略，不会影响 Hadoop 正常运行（可通过编译 Hadoop 源码解决，解决方法请自行搜索）。</p>
+<p>若出现提示 “INFO metrics.MetricsUtil: Unable to obtain hostName java.net.UnknowHostException”，这需要执行如下命令修改 hosts 文件，为你的主机名增加IP映射：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">sudo vim </span><span class="pln">/etc/hosts</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>主机名在终端窗口标题里可以看到，或执行命令 <code>hostname</code> 查看，如下图所示，在最后面增加一行 “127.0.0.1   dblab”：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-14-set-hostname.png" alt="设置主机名的IP映射" title=""><span class="img-caption">设置主机名的IP映射</span></p>
+<p>保存文件后，重新运行 hadoop 实例，若执行成功的话会输出很多作业的相关信息，最后的输出信息如下图所示。作业的结果会输出在指定的 output 文件夹中，通过命令 <code>cat ./output/*</code> 查看结果，符合正则的单词 dfsadmin 出现了1次：</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-15-example-output.png" alt="Hadoop例子输出结果" title=""><span class="img-caption">Hadoop例子输出结果</span></p>
+<p><strong>注意</strong>，Hadoop 默认不会覆盖结果文件，因此再次运行上面实例会提示出错，需要先将 <code>./output</code> 删除。</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">rm </span><span class="pln">-r ./output</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<h2>Hadoop伪分布式配置</h2>
+<p>Hadoop 可以在单节点上以伪分布式的方式运行，Hadoop 进程以分离的 Java 进程来运行，节点既作为 NameNode 也作为 DataNode，同时，读取的是 HDFS 中的文件。</p>
+<p>在设置 Hadoop 伪分布式配置前，我们还需要设置 HADOOP 环境变量，执行如下命令在 ~/.bashrc 中设置：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">gedit ~/.bashrc</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>这次我们选择用 gedit 而不是 vim 来编辑。gedit 是文本编辑器，类似于 Windows 中的记事本，会比较方便。保存后记得关掉整个 gedit 程序，否则会占用终端。在文件最后面增加如下内容：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-shell prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="com"># Hadoop Environment Variables</span></li><li class="L1"><span class="kwd">export </span><span class="pln">HADOOP_HOME=/usr/local/hadoop</span></li><li class="L2"><span class="kwd">export </span><span class="pln">HADOOP_INSTALL=$HADOOP_HOME</span></li><li class="L3"><span class="kwd">export </span><span class="pln">HADOOP_MAPRED_HOME=$HADOOP_HOME</span></li><li class="L4"><span class="kwd">export </span><span class="pln">HADOOP_COMMON_HOME=$HADOOP_HOME</span></li><li class="L5"><span class="kwd">export </span><span class="pln">HADOOP_HDFS_HOME=$HADOOP_HOME</span></li><li class="L6"><span class="kwd">export </span><span class="pln">YARN_HOME=$HADOOP_HOME</span></li><li class="L7"><span class="kwd">export </span><span class="pln">HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native</span></li><li class="L8"><span class="kwd">export </span><span class="pln">PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>保存后，不要忘记执行如下命令使配置生效：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">source </span><span class="pln">~/.bashrc</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>这些变量在启动 Hadoop 进程时需要用到，不设置的话可能会报错（这些变量也可以通过修改 ./etc/hadoop/hadoop-env.sh 实现）。</p>
+<p>Hadoop 的配置文件位于 <code>/usr/local/hadoop/etc/hadoop/</code> 中，伪分布式需要修改2个配置文件 <strong>core-site.xml</strong> 和 <strong>hdfs-site.xml</strong> 。Hadoop的配置文件是 xml 格式，每个配置以声明 property 的 name 和 value 的方式来实现。</p>
+<p>修改配置文件 <strong>core-site.xml</strong> (通过 gedit 编辑会比较方便: <code>gedit ./etc/hadoop/core-site.xml</code>)，将当中的</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-xml prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="tag">&lt;configuration&gt;</span></li><li class="L1"><span class="tag">&lt;/configuration&gt;</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">XML</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>修改为下面配置：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-xml prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="tag">&lt;configuration&gt;</span></li><li class="L1"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L2"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">hadoop.tmp.dir</span><span class="tag">&lt;/name&gt;</span></li><li class="L3"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">file:/usr/local/hadoop/tmp</span><span class="tag">&lt;/value&gt;</span></li><li class="L4"><span class="pln">        </span><span class="tag">&lt;description&gt;</span><span class="pln">Abase for other temporary directories.</span><span class="tag">&lt;/description&gt;</span></li><li class="L5"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L6"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L7"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">fs.defaultFS</span><span class="tag">&lt;/name&gt;</span></li><li class="L8"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">hdfs://localhost:9000</span><span class="tag">&lt;/value&gt;</span></li><li class="L9"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L0"><span class="tag">&lt;/configuration&gt;</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">XML</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>同样的，修改配置文件 <strong>hdfs-site.xml</strong>：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-xml prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="tag">&lt;configuration&gt;</span></li><li class="L1"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L2"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">dfs.replication</span><span class="tag">&lt;/name&gt;</span></li><li class="L3"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">1</span><span class="tag">&lt;/value&gt;</span></li><li class="L4"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L5"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L6"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">dfs.namenode.name.dir</span><span class="tag">&lt;/name&gt;</span></li><li class="L7"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">file:/usr/local/hadoop/tmp/dfs/name</span><span class="tag">&lt;/value&gt;</span></li><li class="L8"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L9"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L0"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">dfs.datanode.data.dir</span><span class="tag">&lt;/name&gt;</span></li><li class="L1"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">file:/usr/local/hadoop/tmp/dfs/data</span><span class="tag">&lt;/value&gt;</span></li><li class="L2"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L3"><span class="tag">&lt;/configuration&gt;</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">XML</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+
+<p>配置完成后，执行 NameNode 的格式化:</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs namenode -format</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>成功的话，会看到 “successfully formatted” 和 “Exitting with status 0” 的提示，若为 “Exitting with status 1” 则是出错。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-16-namenode-format.png" alt="执行NameNode格式化" title=""><span class="img-caption">执行NameNode格式化</span></p>
+<p>接着开启 <code>NaneNode</code> 和 <code>DataNode</code> 守护进程：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./sbin/start-dfs.sh</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>若出现如下 SSH 的提示 “Are you sure you want to continue connecting”，输入 yes 即可。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-17-ssh-continue.png" alt="首次启动Hadoop时的SSH提示" title=""><span class="img-caption">首次启动Hadoop时的SSH提示</span></p>
+<p>启动时可能会有 WARN 提示 “WARN util.NativeCodeLoader…” 如前面提到的，这个提示不会影响正常使用。</p>
+<p>启动完成后，可以通过命令 <code>jps</code> 来判断是否成功启动，若成功启动则会列出如下进程: “NameNode”、”DataNode”和<code>SecondaryNameNode</code>（如果 SecondaryNameNode 没有启动，请运行 sbin/stop-dfs.sh 关闭进程，然后再次尝试启动尝试）。如果没有 NameNode 或 DataNode ，那就是配置不成功，请仔细检查之前步骤，或通过查看启动日志排查原因。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-18-jps.png" alt="通过jps查看启动的Hadoop进程" title=""><span class="img-caption">通过jps查看启动的Hadoop进程</span></p>
+<div class="callout callout-note"><em class="callout-title">通过查看启动日志分析启动失败原因</em><p>有时 Hadoop 无法正确启动，如 NameNode 进程没有顺利启动，这时可以查看启动日志来排查原因，注意几点：</p>
+<ul>
+<li>启动时会提示形如 “dblab: starting namenode, logging to /usr/local/hadoop/logs/hadoop-hadoop-namenode-dblab.out”，其中 dblab 对应你的主机名，但启动的日志信息是记录在 /usr/local/hadoop/logs/hadoop-hadoop-namenode-dblab.log 中，所以应该查看这个后缀为 <strong>.log</strong> 的文件；</li>
+<li>每一次的启动日志都是追加在日志文件之后，所以得拉到最后面看，看下记录的时间就知道了。</li>
+<li>一般出错的提示在最后面，也就是写着 Fatal、Error 或者 Java Exception 的地方。</li>
+<li>可以在网上搜索一下出错信息，看能否找到一些相关的解决方法。</li>
+</ul>
+</div>
+<p>成功启动后，可以访问 Web 界面 <a href="http://localhost:50070/" target="_blank">http://localhost:50070</a> 查看 NameNode 和 Datanode 信息，还可以在线查看 HDFS 中的文件。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-19-web-ui.png" alt="Hadopp的Web界面" title=""><span class="img-caption">Hadopp的Web界面</span></p>
+<h2>运行Hadoop伪分布式实例</h2>
+<p>上面的单机模式，grep 例子读取的是本地数据，伪分布式读取的则是 HDFS 上的数据。要使用 HDFS，首先需要在 HDFS 中创建用户目录：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs dfs </span><span class="kwd">-mkdir </span><span class="pln">-p /user/hadoop</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>接着将 ./etc/hadoop 中的 xml 文件作为输入文件复制到分布式文件系统中，即将 /usr/local/hadoop/etc/hadoop 复制到分布式文件系统中的 /user/hadoop/input 中。我们使用的是 hadoop 用户，并且已创建相应的用户目录 /user/hadoop ，因此在命令中就可以使用相对路径如 input，其对应的绝对路径就是 /user/hadoop/input:</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs dfs </span><span class="kwd">-mkdir </span><span class="pln">input</span></li><li class="L1"><span class="pln">./bin/hdfs dfs -put ./etc/hadoop/*.xml input</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>复制完成后，可以通过如下命令查看 HDFS 中的文件列表：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs dfs </span><span class="kwd">-ls </span><span class="pln">input</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>伪分布式运行 MapReduce 作业的方式跟单机模式相同，区别在于伪分布式读取的是HDFS中的文件（可以将单机步骤中创建的本地 input 文件夹，输出结果 output 文件夹都删掉来验证这一点）。</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar grep input output </span><span class="str">'dfs[a-z.]+'</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>查看运行结果的命令（查看的是位于 HDFS 中的输出结果）：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs dfs </span><span class="kwd">-cat </span><span class="pln">output/*</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>结果如下，注意到刚才我们已经更改了配置文件，所以运行结果不同。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-20-grep-result.png" alt="Hadoop伪分布式运行grep的结果" title=""><span class="img-caption">Hadoop伪分布式运行grep的结果</span></p>
+<p>我们也可以将运行结果取回到本地：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">rm </span><span class="pln">-r ./output    </span><span class="com"># 先删除本地的 output 文件夹（如果存在）</span></li><li class="L1"><span class="pln">./bin/hdfs dfs -get output ./output     </span><span class="com"># 将 HDFS 上的 output 文件夹拷贝到本机</span></li><li class="L2"><span class="kwd">cat </span><span class="pln">./output/*</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>Hadoop 运行程序时，输出目录不能存在，否则会提示错误 “org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://localhost:9000/user/hadoop/output already exists” ，因此若要再次执行，需要执行如下命令删除 output 文件夹:</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./bin/hdfs dfs </span><span class="kwd">-rm </span><span class="pln">-r output    </span><span class="com"># 删除 output 文件夹</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<div class="callout callout-note"><em class="callout-title">运行程序时，输出目录不能存在</em><p>运行 Hadoop 程序时，为了防止覆盖结果，程序指定的输出目录（如 output）不能存在，否则会提示错误，因此运行前需要先删除输出目录。在实际开发应用程序时，可考虑在程序中加上如下代码，能在每次运行时自动删除输出目录，避免繁琐的命令行操作：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-java prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="typ">Configuration</span><span class="pln"> conf </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Configuration</span><span class="pun">();</span></li><li class="L1"><span class="typ">Job</span><span class="pln"> job </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Job</span><span class="pun">(</span><span class="pln">conf</span><span class="pun">);</span></li><li class="L2"><span class="pln">&nbsp;</span></li><li class="L3"><span class="com">/* 删除输出目录 */</span></li><li class="L4"><span class="typ">Path</span><span class="pln"> outputPath </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Path</span><span class="pun">(</span><span class="pln">args</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]);</span></li><li class="L5"><span class="pln">outputPath</span><span class="pun">.</span><span class="pln">getFileSystem</span><span class="pun">(</span><span class="pln">conf</span><span class="pun">).</span><span class="kwd">delete</span><span class="pun">(</span><span class="pln">outputPath</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">);</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Java</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+</div>
+<p>若要关闭 Hadoop，则运行</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./sbin/stop-dfs.sh</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<div class="callout callout-warning"><em class="callout-title">注意</em><p>下次启动 hadoop 时，无需进行 NameNode 的初始化，只需要运行 <code>./sbin/start-dfs.sh</code> 就可以！</p></div>
+<h2>启动YARN</h2>
+<p>（伪分布式不启动 YARN 也可以，一般不会影响程序执行）</p>
+<p>有的读者可能会疑惑，怎么启动 Hadoop 后，见不到书上所说的 JobTracker 和 TaskTracker，这是因为新版的 Hadoop 使用了新的 MapReduce 框架（MapReduce V2，也称为 YARN，Yet Another Resource Negotiator）。</p>
+<p>YARN 是从 MapReduce 中分离出来的，负责资源管理与任务调度。YARN 运行于 MapReduce 之上，提供了高可用性、高扩展性，YARN 的更多介绍在此不展开，有兴趣的可查阅相关资料。</p>
+<p>上述通过 <code>./sbin/start-dfs.sh</code> 启动 Hadoop，仅仅是启动了 MapReduce 环境，我们可以启动 YARN ，让 YARN 来负责资源管理与任务调度。</p>
+<p>首先修改配置文件 <strong>mapred-site.xml</strong>，这边需要先进行重命名：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="kwd">mv </span><span class="pln">./etc/hadoop/mapred-site.xml.template ./etc/hadoop/mapred-site.xml</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>然后再进行编辑，同样使用 gedit 编辑会比较方便些 <code>gedit ./etc/hadoop/mapred-site.xml</code> ：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-xml prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="tag">&lt;configuration&gt;</span></li><li class="L1"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L2"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">mapreduce.framework.name</span><span class="tag">&lt;/name&gt;</span></li><li class="L3"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">yarn</span><span class="tag">&lt;/value&gt;</span></li><li class="L4"><span class="pln">    </span><span class="tag">&lt;/property&gt;</span></li><li class="L5"><span class="tag">&lt;/configuration&gt;</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">XML</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>接着修改配置文件 <strong>yarn-site.xml</strong>：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-xml prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="tag">&lt;configuration&gt;</span></li><li class="L1"><span class="pln">    </span><span class="tag">&lt;property&gt;</span></li><li class="L2"><span class="pln">        </span><span class="tag">&lt;name&gt;</span><span class="pln">yarn.nodemanager.aux-services</span><span class="tag">&lt;/name&gt;</span></li><li class="L3"><span class="pln">        </span><span class="tag">&lt;value&gt;</span><span class="pln">mapreduce_shuffle</span><span class="tag">&lt;/value&gt;</span></li><li class="L4"><span class="pln">        </span><span class="tag">&lt;/property&gt;</span></li><li class="L5"><span class="tag">&lt;/configuration&gt;</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">XML</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>然后就可以启动 YARN 了（需要先执行过 <code>./sbin/start-dfs.sh</code>）：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./sbin/start-yarn.sh      $ 启动YARN</span></li><li class="L1"><span class="pln">./sbin/mr-jobhistory-daemon.sh start historyserver  </span><span class="com"># 开启历史服务器，才能在Web中查看任务运行情况</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>开启后通过 <code>jps</code> 查看，可以看到多了 NodeManager 和 ResourceManager 两个后台进程，如下图所示。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-21-start-yarn.png" alt="开启YARN" title=""><span class="img-caption">开启YARN</span></p>
+<p>启动 YARN 之后，运行实例的方法还是一样的，仅仅是资源管理方式、任务调度不同。观察日志信息可以发现，不启用 YARN 时，是 “mapred.LocalJobRunner” 在跑任务，启用 YARN 之后，是 “mapred.YARNRunner” 在跑任务。启动 YARN 有个好处是可以通过 Web 界面查看任务的运行情况：<a href="http://localhost:8088/cluster" target="_blank">http://localhost:8088/cluster</a>，如下图所示。</p>
+<p><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/install-hadoop-centos-22-yarn-cluster.png" alt="开启YARN后可以查看任务运行信息" title=""><span class="img-caption">开启YARN后可以查看任务运行信息</span></p>
+<p>但 YARN 主要是为集群提供更好的资源管理与任务调度，然而这在单机上体现不出价值，反而会使程序跑得稍慢些。因此在单机上是否开启 YARN 就看实际情况了。</p>
+<div class="callout callout-warning"><em class="callout-title">不启动 YARN 需重命名 mapred-site.xml</em><p>如果不想启动 YARN，务必把配置文件 <strong>mapred-site.xml</strong> 重命名，改成 mapred-site.xml.template，需要用时改回来就行。否则在该配置文件存在，而未开启 YARN 的情况下，运行程序会提示 “Retrying connect to server: 0.0.0.0/0.0.0.0:8032” 的错误，这也是为何该配置文件初始文件名为 mapred-site.xml.template。</p></div>
+<p>同样的，关闭 YARN 的脚本如下：</p>
+<div class="code-pretty-container"><pre class="prettyprint linenums lang-bash prettyprinted" style=""><ol class="linenums"><li class="L0"><span class="pln">./sbin/stop-yarn.sh</span></li><li class="L1"><span class="pln">./sbin/mr-jobhistory-daemon.sh stop historyserver</span></li></ol></pre><div class="code-pretty-toolbar"><span class="title">Shell 命令</span><a href="javascript:void(0);" title="复制代码" class="tool clipboard"><i class="fa fa-files-o"></i></a><a href="javascript:void(0);" title="查看纯文本代码" class="tool view-source"><i class="fa fa-code"></i></a><a href="javascript:void(0);" title="返回代码高亮" class="tool back-to-pretty"><i class="fa fa-undo"></i></a><span class="msg"></span></div></div>
+<p>自此，你已经掌握 Hadoop 的配置和基本使用了。</p>
+<h2>附加教程: 配置PATH环境变量</h2>
+<p>在这里额外讲一下 PATH 这个环境变量（可执行 <code>echo $PATH</code> 查看，当中包含了多个目录）。例如我们在主文件夹 ~ 中执行 <code>ls</code> 这个命令时，实际执行的是 <code>/bin/ls</code> 这个程序，而不是 <code>~/ls</code> 这个程序。系统是根据 PATH 这个环境变量中包含的目录位置，逐一进行查找，直至在这些目录位置下找到匹配的程序（若没有匹配的则提示该命令不存在）。</p>
+<p>上面的教程中，我们都是先进入到 /usr/local/hadoop 目录中，再执行 <code>./sbin/hadoop</code>，实际上等同于运行 <code>/usr/local/hadoop/sbin/hadoop</code>。我们可以将 Hadoop 命令的相关目录加入到 PATH 环境变量中，这样就可以直接通过 <code>start-dfs.sh</code> 开启 Hadoop，也可以直接通过 <code>hdfs</code> 访问 HDFS 的内容，方便平时的操作。</p>
+<p>在前面我们设置 HADOOP 环境变量时，我们已经顺便设置了 PATH 变量（即 “export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin”），那么以后我们在任意目录中都可以直接通过执行 <code>start-dfs.sh</code> 来启动 Hadoop 或者执行 <code>hdfs dfs -ls input</code> 查看 HDFS 文件了，读者不妨现在就执行 <code>hdfs dfs -ls input</code> 试试看。</p>
+<h2>安装Hadoop集群</h2>
+<p>在平时的学习中，我们使用伪分布式就足够了。如果需要安装 Hadoop 集群，请查看<a href="http://www.powerxing.com/install-hadoop-cluster/" target="_blank">Hadoop集群安装配置教程</a>。</p>
+<h2>相关教程</h2>
+<ul>
+<li><a href="http://www.powerxing.com/hadoop-build-project-using-eclipse/" target="_blank">使用Eclipse编译运行MapReduce程序</a>: 用文本编辑器写 Java 程序是不靠谱的，还是用 Eclipse 比较方便。</li>
+<li><a href="http://www.powerxing.com/hadoop-build-project-by-shell/" target="_blank">使用命令行编译打包运行自己的MapReduce程序</a>: 有时候需要直接通过命令来编译 MapReduce 程序。</li>
+</ul>
+<h2>参考资料</h2>
+<ul>
+<li><a href="http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank">Hadoop: Setting up a Single Node Cluster</a></li>
+<li><a href="http://tecadmin.net/setup-hadoop-single-node-cluster-on-centos-redhat/" target="_blank">How to Setup Hadoop 2.7.1 on CentOS, Ubuntu &amp; LinuxMint</a></li>
+<li><a href="http://blog.chinaunix.net/uid-28311809-id-4383551.html" target="_blank">Yarn简单介绍及内存配置</a></li>
+</ul>
+			</div><!-- .entry-content -->
+
+	<footer class="entry-footer"><div style="border-top: 1px dashed #DDD; padding: 10px 0 0; margin-top: 15px;"><p style="text-align: center;"><img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/dashang-2.png"></p><p style="text-align: center;">文章很给力？微信扫一扫给作者打赏2元 :)<br><a href="http://www.powerxing.com/sponsor/" target="_blank" style="font-size: 13px;">~感谢赞助者~</a></p></div>
+		<div class="entry-info">
+			<span class="permalink"><i class="fa fa-external-link"></i> <a href="http://www.powerxing.com/install-hadoop-in-centos/" title="Hadoop安装教程_单机/伪分布式配置_CentOS6.4/Hadoop2.6.0">http://www.powerxing.com/install-hadoop-in-centos/</a></span><span class="category"><i class="fa fa-folder-open-o"></i> <a href="http://www.powerxing.com/notes/" rel="category tag">笔记</a></span><span class="tags"><i class="fa fa-tags"></i><a href="http://www.powerxing.com/tag/centos/" rel="tag">CentOS</a>, <a href="http://www.powerxing.com/tag/hadoop/" rel="tag">Hadoop</a></span>		</div>
+		<div class="yarpp-related">
+<h6>相关文章</h6><ol>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/install-hadoop/" rel="bookmark" title="Hadoop安装教程_单机/伪分布式配置_Hadoop2.6.0/Ubuntu14.04">Hadoop安装教程_单机/伪分布式配置_Hadoop2.6.0/Ubuntu14.04 </a></li>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/install-hadoop-cluster/" rel="bookmark" title="Hadoop集群安装配置教程_Hadoop2.6.0_Ubuntu/CentOS">Hadoop集群安装配置教程_Hadoop2.6.0_Ubuntu/CentOS </a></li>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/hadoop-build-project-by-shell/" rel="bookmark" title="使用命令行编译打包运行自己的MapReduce程序 Hadoop2.6.0">使用命令行编译打包运行自己的MapReduce程序 Hadoop2.6.0 </a></li>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/hadoop-build-project-using-eclipse/" rel="bookmark" title="使用Eclipse编译运行MapReduce程序 Hadoop2.6.0_Ubuntu/CentOS">使用Eclipse编译运行MapReduce程序 Hadoop2.6.0_Ubuntu/CentOS </a></li>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/hadoop-in-practice-joins/" rel="bookmark" title="Hadoop-in-Practice第四章MapReduce-Join代码运行问题">Hadoop-in-Practice第四章MapReduce-Join代码运行问题 </a></li>
+<li><i class="fa fa-chevron-right"></i><a href="http://www.powerxing.com/install-hadoop-simplify/" rel="bookmark" title="Hadoop安装配置简略教程">Hadoop安装配置简略教程 </a></li>
+</ol>
+</div>
+	</footer><!-- .entry-footer -->
+</article><!-- #post-## -->			
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			<span>55条评论</span>		</h2>
+
+		
+		<ol class="comment-list">
+					<li id="comment-5453" class="comment even thread-even depth-1">
+			<article id="div-comment-5453" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">阿冬</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-5453">
+							<time datetime="2017-05-04T11:02:17+00:00">
+								2017-05-04 11:02							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>很有启发，写的很好，谢谢</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=5453#respond" onclick="return addComment.moveForm( &quot;div-comment-5453&quot;, &quot;5453&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给阿冬">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-4798" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-4798" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/5072955820" rel="external nofollow" class="url">zyad86</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-4798">
+							<time datetime="2017-04-20T22:50:44+00:00">
+								2017-04-20 22:50							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>你好 请问可以搬运hadoop配置和运行部分到我的博客上吗  Reference会写的<br>
+ 感谢博主</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=4798#respond" onclick="return addComment.moveForm( &quot;div-comment-4798&quot;, &quot;4798&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给zyad86">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3685" class="comment even thread-even depth-1">
+			<article id="div-comment-3685" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">rounder</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-3685">
+							<time datetime="2017-04-11T10:11:43+00:00">
+								2017-04-11 10:11							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>启动成功了，页面也能访问，不过创建文件夹的时候总是不成功</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=3685#respond" onclick="return addComment.moveForm( &quot;div-comment-3685&quot;, &quot;3685&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给rounder">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3184" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-3184" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/smiock" rel="external nofollow" class="url">smiock_曦</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-3184">
+							<time datetime="2017-04-06T16:52:19+00:00">
+								2017-04-06 16:52							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>您好！ 遇到一点问题<br>
+[hadoop@oracle hadoop]$ bin/hadoop version<br>
+Error: Could not find or load main class org.apache.hadoop.util.VersionInfo</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=3184#respond" onclick="return addComment.moveForm( &quot;div-comment-3184&quot;, &quot;3184&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给smiock_曦">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3153" class="comment even thread-even depth-1">
+			<article id="div-comment-3153" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">fighting lucky</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-3153">
+							<time datetime="2017-04-05T17:26:36+00:00">
+								2017-04-05 17:26							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>50030为什么不能访问</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=3153#respond" onclick="return addComment.moveForm( &quot;div-comment-3153&quot;, &quot;3153&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给fighting lucky">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1558" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1558" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">ChanJi</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1558">
+							<time datetime="2017-03-12T16:29:55+00:00">
+								2017-03-12 16:29							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>教程真心不错，非常的nice，讲的很详细，不过在手动编译运行MapReduce程序的时候没有说明先要将input文件上传到hadoop上去，饶了不少的弯路。非常给力～ <img src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/laugh.gif"> </p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1558#respond" onclick="return addComment.moveForm( &quot;div-comment-1558&quot;, &quot;1558&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给ChanJi">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1545" class="comment even thread-even depth-1 parent">
+			<article id="div-comment-1545" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/wozhishizuozuoye" rel="external nofollow" class="url">耿楠</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1545">
+							<time datetime="2017-03-06T16:29:33+00:00">
+								2017-03-06 16:29							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>./bin/hdfs namenode -format出现bash: ./bin/hdfs: 没有那个文件或目录<br>
+请问是什么原因</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1545#respond" onclick="return addComment.moveForm( &quot;div-comment-1545&quot;, &quot;1545&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给耿楠">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1547" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2 parent">
+			<article id="div-comment-1547" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1547">
+							<time datetime="2017-03-07T00:25:46+00:00">
+								2017-03-07 00:25							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>注意这个是相对路径，需要在 /usr/local/hadoop 目录中执行</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1547#respond" onclick="return addComment.moveForm( &quot;div-comment-1547&quot;, &quot;1547&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1548" class="comment even depth-3">
+			<article id="div-comment-1548" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/wozhishizuozuoye" rel="external nofollow" class="url">耿楠</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1548">
+							<time datetime="2017-03-07T16:22:25+00:00">
+								2017-03-07 16:22							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>好的，感谢</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1548#respond" onclick="return addComment.moveForm( &quot;div-comment-1548&quot;, &quot;1548&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给耿楠">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1539" class="comment odd alt thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-1539" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/ALBERTone" rel="external nofollow" class="url">恐懼吞噬靈魂</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1539">
+							<time datetime="2017-02-28T21:36:43+00:00">
+								2017-02-28 21:36							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>输入JAVA_HOME/bin/java -version 显示No such file or directory，不知道为什么？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1539#respond" onclick="return addComment.moveForm( &quot;div-comment-1539&quot;, &quot;1539&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给恐懼吞噬靈魂">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-4193" class="comment even depth-2">
+			<article id="div-comment-4193" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.baidu.com/" rel="external nofollow" class="url">然叔</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-4193">
+							<time datetime="2017-04-16T14:12:37+00:00">
+								2017-04-16 14:12							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>同样的问题，层主解决了吗</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=4193#respond" onclick="return addComment.moveForm( &quot;div-comment-4193&quot;, &quot;4193&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给然叔">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-5162" class="comment odd alt depth-2">
+			<article id="div-comment-5162" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/llj314314" rel="external nofollow" class="url">沙漠玫瑰</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-5162">
+							<time datetime="2017-04-25T11:19:08+00:00">
+								2017-04-25 11:19							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>你的问题解决了吗？我也遇到了同样的问题，不知道该怎么办</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=5162#respond" onclick="return addComment.moveForm( &quot;div-comment-5162&quot;, &quot;5162&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给沙漠玫瑰">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1517" class="comment even thread-even depth-1">
+			<article id="div-comment-1517" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">hh</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1517">
+							<time datetime="2017-02-20T15:58:16+00:00">
+								2017-02-20 15:58							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>文章不错</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1517#respond" onclick="return addComment.moveForm( &quot;div-comment-1517&quot;, &quot;1517&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给hh">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1497" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1497" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">Bob</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1497">
+							<time datetime="2017-01-23T14:01:38+00:00">
+								2017-01-23 14:01							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>666</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1497#respond" onclick="return addComment.moveForm( &quot;div-comment-1497&quot;, &quot;1497&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Bob">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1401" class="comment even thread-even depth-1">
+			<article id="div-comment-1401" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">给力星给力</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1401">
+							<time datetime="2016-11-29T23:01:39+00:00">
+								2016-11-29 23:01							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>非常给力</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1401#respond" onclick="return addComment.moveForm( &quot;div-comment-1401&quot;, &quot;1401&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星给力">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1382" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1382" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/zhong229523" rel="external nofollow" class="url">Aiden</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1382">
+							<time datetime="2016-11-25T11:44:35+00:00">
+								2016-11-25 11:44							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>已赞助</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1382#respond" onclick="return addComment.moveForm( &quot;div-comment-1382&quot;, &quot;1382&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Aiden">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1367" class="comment even thread-even depth-1">
+			<article id="div-comment-1367" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">mumingv</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1367">
+							<time datetime="2016-11-20T00:02:10+00:00">
+								2016-11-20 00:02							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>文章很好，已赞助。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1367#respond" onclick="return addComment.moveForm( &quot;div-comment-1367&quot;, &quot;1367&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给mumingv">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1314" class="comment odd alt thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-1314" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/zoe_lee777" rel="external nofollow" class="url">zoe_lee</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1314">
+							<time datetime="2016-11-04T16:44:58+00:00">
+								2016-11-04 16:44							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>你好，电脑之前安装好过伪分布式hadoop，昨天试过各种进程也可以启动。但是问题是今天我在操作过程中，更改了一些文件中的配置（不涉及core-site和hdfs-site），结果出现报错Error: Could not find or load main class org.apache.hadoop.hdfs.tools.GetConf。不仅不能格式化namenode，各种进程也启动不了。请问这个问题怎么解决？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1314#respond" onclick="return addComment.moveForm( &quot;div-comment-1314&quot;, &quot;1314&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给zoe_lee">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1315" class="comment even depth-2">
+			<article id="div-comment-1315" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/zoe_lee777" rel="external nofollow" class="url">zoe_lee</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1315">
+							<time datetime="2016-11-04T17:26:36+00:00">
+								2016-11-04 17:26							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>我重启了系统，这个问题又没有了。但是又有新问题：将文件上传至hdfs时出现报错<br>
+（命令为bin/hdfs dfs -put ./etc/hadoop ./input）<br>
+16/11/04 17:22:50 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform… using builtin-java classes where applicable<br>
+put: `./input’: No such file or directory</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1315#respond" onclick="return addComment.moveForm( &quot;div-comment-1315&quot;, &quot;1315&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给zoe_lee">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1291" class="comment odd alt thread-even depth-1 parent">
+			<article id="div-comment-1291" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/zhouxudong1993" rel="external nofollow" class="url">无尘逃离</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1291">
+							<time datetime="2016-10-28T00:01:55+00:00">
+								2016-10-28 00:01							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar grep ./input ./output ‘dfs[a-z.]+’<br>
+这一步没有出现博主说的“INFO metrics.MetricsUtil: Unable to obtain hostName java.net.UnknowHostException”这个错误。<br>
+但是依然不对。出现了OpenJDK Client VM warning: You have loaded library /usr/local/hadoop/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1291#respond" onclick="return addComment.moveForm( &quot;div-comment-1291&quot;, &quot;1291&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给无尘逃离">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1294" class="comment even depth-2 parent">
+			<article id="div-comment-1294" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/zhouxudong1993" rel="external nofollow" class="url">无尘逃离</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1294">
+							<time datetime="2016-10-28T12:25:12+00:00">
+								2016-10-28 12:25							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>java.lang.InternalError还是上面的那一步，出现这个错</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1294#respond" onclick="return addComment.moveForm( &quot;div-comment-1294&quot;, &quot;1294&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给无尘逃离">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1298" class="comment odd alt depth-3">
+			<article id="div-comment-1298" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">摆渡者</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1298">
+							<time datetime="2016-10-29T16:45:39+00:00">
+								2016-10-29 16:45							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>重新装个1.8.0的jdk 就OK了 我刚试过1.7.0感觉有问题呢 我用centos6.5</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1298#respond" onclick="return addComment.moveForm( &quot;div-comment-1298&quot;, &quot;1298&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给摆渡者">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1255" class="comment even thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-1255" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/s1281446933" rel="external nofollow" class="url">申畅</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1255">
+							<time datetime="2016-10-11T11:38:39+00:00">
+								2016-10-11 11:38							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>你好up主，我在弄hadoop压缩包解压的时候，在用的虚拟机总会死机，我用的是1G内存，是不是不够？感谢您分享教程！</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1255#respond" onclick="return addComment.moveForm( &quot;div-comment-1255&quot;, &quot;1255&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给申畅">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1260" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2 parent">
+			<article id="div-comment-1260" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1260">
+							<time datetime="2016-10-11T16:44:59+00:00">
+								2016-10-11 16:44							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>1G内存应该是够用的，给解压命令加上 -v，也就是 tar -zvxf …<br>
+尝试看看具体的解压执行过程，可能会有一些有用的提示</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1260#respond" onclick="return addComment.moveForm( &quot;div-comment-1260&quot;, &quot;1260&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1266" class="comment even depth-3">
+			<article id="div-comment-1266" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/s1281446933" rel="external nofollow" class="url">申畅</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1266">
+							<time datetime="2016-10-13T16:47:11+00:00">
+								2016-10-13 16:47							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>好的！谢谢您！太给力了！</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1266#respond" onclick="return addComment.moveForm( &quot;div-comment-1266&quot;, &quot;1266&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给申畅">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1101" class="comment odd alt thread-even depth-1 parent">
+			<article id="div-comment-1101" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/2455882863" rel="external nofollow" class="url">空位一人</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1101">
+							<time datetime="2016-08-23T00:57:19+00:00">
+								2016-08-23 00:57							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>执行了./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar grep input output ‘dfs[a-z.]+’，<br>
+output里的结果为什么只有 1 dfsadmin, O(∩_∩)O谢谢</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1101#respond" onclick="return addComment.moveForm( &quot;div-comment-1101&quot;, &quot;1101&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给空位一人">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1104" class="comment byuser comment-author-caiminxing bypostauthor even depth-2 parent">
+			<article id="div-comment-1104" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1104">
+							<time datetime="2016-08-23T10:14:14+00:00">
+								2016-08-23 10:14							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>这个结果没错~ 初始的配置文件就是只有一个 dfsadmin，如果改过配置文件，才会不同~</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1104#respond" onclick="return addComment.moveForm( &quot;div-comment-1104&quot;, &quot;1104&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1107" class="comment odd alt depth-3 parent">
+			<article id="div-comment-1107" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/2455882863" rel="external nofollow" class="url">空位一人</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1107">
+							<time datetime="2016-08-23T23:31:40+00:00">
+								2016-08-23 23:31							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>下面两条命令是一样的吗，有什么区别啊：<br>
+./bin/hdfs dfs -mkdir input<br>
+hadoop fs -mkdir input</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1107#respond" onclick="return addComment.moveForm( &quot;div-comment-1107&quot;, &quot;1107&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给空位一人">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1108" class="comment byuser comment-author-caiminxing bypostauthor even depth-4">
+			<article id="div-comment-1108" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1108">
+							<time datetime="2016-08-24T09:27:36+00:00">
+								2016-08-24 09:27							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>第一条命令更为具体，它表示的是，运行 hdfs 程序（haddop分布式文件系统），对 dfs（分布式文件系统） 进行操作。<br>
+第二条命令则表示的是，运行 hadoop 程序，对fs（文件系统）进行操作。</p>
+<p>多数情况下，这两者效果等价，区别的一点就是，fs的范围比较大，而且可能默认指的是本地文件系统（前缀 file://），而dfs则是默认带hdfs://前缀。因此：<br>
+hdfs dfs -mkdir input  =&gt;  -mkdir hdfs://…/input<br>
+hadoop fs -mkdir input  =&gt; -mkdir file://…/input</p>
+<p>这是我的理解，具体你可以实践一下。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1108#respond" onclick="return addComment.moveForm( &quot;div-comment-1108&quot;, &quot;1108&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1109" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-4">
+			<article id="div-comment-1109" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1109">
+							<time datetime="2016-08-24T09:46:25+00:00">
+								2016-08-24 09:46							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>另外， hadoop dfs … 等价于  hdfs dfs …</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1109#respond" onclick="return addComment.moveForm( &quot;div-comment-1109&quot;, &quot;1109&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1089" class="comment even thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-1089" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">Anni</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1089">
+							<time datetime="2016-08-16T16:04:32+00:00">
+								2016-08-16 16:04							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>VirtualBox, CentOS6.4 64位，安装openjdk后执行单机执行示例，会报错。找了很久的问题，后来发现卸载openjdk，换成sun公司的jdk之后，错误消除。不知道是什么原因导致openjdk报错。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1089#respond" onclick="return addComment.moveForm( &quot;div-comment-1089&quot;, &quot;1089&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Anni">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1093" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2">
+			<article id="div-comment-1093" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1093">
+							<time datetime="2016-08-17T22:36:40+00:00">
+								2016-08-17 22:36							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>是的，有些莫名其妙的情况确实是跟jdk有关，具体我也不太清楚….</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1093#respond" onclick="return addComment.moveForm( &quot;div-comment-1093&quot;, &quot;1093&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1074" class="comment even thread-even depth-1 parent">
+			<article id="div-comment-1074" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">xianglong</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1074">
+							<time datetime="2016-08-04T20:40:54+00:00">
+								2016-08-04 20:40							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>写的不错，不仅讲了步骤还讲了一些linux的知识，很适合新人。捐赠2元支持博主。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1074#respond" onclick="return addComment.moveForm( &quot;div-comment-1074&quot;, &quot;1074&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给xianglong">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1075" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2">
+			<article id="div-comment-1075" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1075">
+							<time datetime="2016-08-04T22:28:38+00:00">
+								2016-08-04 22:28							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>谢谢支持~</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1075#respond" onclick="return addComment.moveForm( &quot;div-comment-1075&quot;, &quot;1075&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1016" class="comment even thread-odd thread-alt depth-1">
+			<article id="div-comment-1016" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">bbao</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1016">
+							<time datetime="2016-07-04T00:14:24+00:00">
+								2016-07-04 00:14							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>新人，今天尝试了一下单机伪集群的例子，其中hadoop-env.sh中的export JAVA_HOME=${JAVA_HOME} 这个地方不生效，我这边要使用绝对路径；java_home配置没有问题，可以输出并使用。 hadoop版本 2.7.x</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1016#respond" onclick="return addComment.moveForm( &quot;div-comment-1016&quot;, &quot;1016&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给bbao">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-999" class="comment odd alt thread-even depth-1">
+			<article id="div-comment-999" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/2497629793" rel="external nofollow" class="url">牛奶豆浆儿</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-999">
+							<time datetime="2016-06-27T12:54:52+00:00">
+								2016-06-27 12:54							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>楼主这个教程真是好，我之前在网上找的各种教程全都不能用，各种坑。。。按照楼主的教程，分分钟搞定。。。已捐赠，感谢！</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=999#respond" onclick="return addComment.moveForm( &quot;div-comment-999&quot;, &quot;999&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给牛奶豆浆儿">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-965" class="comment even thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-965" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/2242603254" rel="external nofollow" class="url">天堂电影院长</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-965">
+							<time datetime="2016-05-29T21:59:06+00:00">
+								2016-05-29 21:59							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>博主，你的.bashrc配置文件少写一条<br>
+export HADOOP_OPTS="-Djava.library.path=${HADOOP_INSTALL}/lib:${HADOOP_INSTALL}/lib/native"<br>
+亲测过，少写这条，配置就失败。希望博主尽快改正，不要误导了其他小白啊</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=965#respond" onclick="return addComment.moveForm( &quot;div-comment-965&quot;, &quot;965&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给天堂电影院长">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-968" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2">
+			<article id="div-comment-968" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-968">
+							<time datetime="2016-05-30T00:44:31+00:00">
+								2016-05-30 00:44							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>你所用的系统版本是？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=968#respond" onclick="return addComment.moveForm( &quot;div-comment-968&quot;, &quot;968&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-938" class="comment even thread-even depth-1 parent">
+			<article id="div-comment-938" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/jiongh5172" rel="external nofollow" class="url">木兰减字调</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-938">
+							<time datetime="2016-05-17T15:13:11+00:00">
+								2016-05-17 15:13							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>教程貌似少了一步，hadoop-evn.sh里面的$JAVA_HOME要改一下，不然启动hadoop提示找不到$JAVA_HOME</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=938#respond" onclick="return addComment.moveForm( &quot;div-comment-938&quot;, &quot;938&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给木兰减字调">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-939" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-2 parent">
+			<article id="div-comment-939" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-939">
+							<time datetime="2016-05-17T16:36:24+00:00">
+								2016-05-17 16:36							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>能否执行下命令 echo $JAVA_HOME 然后告知我结果？一般情况下，$JAVA_HOME 设置对了是不会出现这种情况的。我也想了解下有没有特殊情况，例如 $JAVA_HOME 确实设置好了但还是出错，若这样，我就在教程里补充下。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=939#respond" onclick="return addComment.moveForm( &quot;div-comment-939&quot;, &quot;939&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-940" class="comment even depth-3 parent">
+			<article id="div-comment-940" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/jiongh5172" rel="external nofollow" class="url">木兰减字调</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-940">
+							<time datetime="2016-05-18T19:17:55+00:00">
+								2016-05-18 19:17							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>/usr/java/jdk1.7.0_79     我是自己下载的二进制包。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=940#respond" onclick="return addComment.moveForm( &quot;div-comment-940&quot;, &quot;940&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给木兰减字调">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-941" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-4 parent">
+			<article id="div-comment-941" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-941">
+							<time datetime="2016-05-18T23:10:49+00:00">
+								2016-05-18 23:10							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>谢谢，那执行 $JAVA_HOME/bin/java -version 呢？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=941#respond" onclick="return addComment.moveForm( &quot;div-comment-941&quot;, &quot;941&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-945" class="comment even depth-5 parent">
+			<article id="div-comment-945" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/jiongh5172" rel="external nofollow" class="url">木兰减字调</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-945">
+							<time datetime="2016-05-19T22:27:05+00:00">
+								2016-05-19 22:27							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>$ $JAVA_HOME/bin/java -version<br>
+java version "1.7.0_79"<br>
+Java(TM) SE Runtime Environment (build 1.7.0_79-b15)<br>
+Java HotSpot(TM) 64-Bit Server VM (build 24.79-b02, mixed mode)</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-947" class="comment byuser comment-author-caiminxing bypostauthor odd alt depth-5">
+			<article id="div-comment-947" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-947">
+							<time datetime="2016-05-20T15:04:54+00:00">
+								2016-05-20 15:04							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>好的，那我还是在教程里再补充说明一下吧。</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1000" class="comment even depth-2">
+			<article id="div-comment-1000" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://weibo.com/2497629793" rel="external nofollow" class="url">牛奶豆浆儿</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-1000">
+							<time datetime="2016-06-27T12:56:47+00:00">
+								2016-06-27 12:56							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>新版本的hadoop这些都不用修改</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=1000#respond" onclick="return addComment.moveForm( &quot;div-comment-1000&quot;, &quot;1000&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给牛奶豆浆儿">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-855" class="comment odd alt thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-855" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/a673556617" rel="external nofollow" class="url">昶</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-855">
+							<time datetime="2016-04-19T01:21:47+00:00">
+								2016-04-19 01:21							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>发现需要在配置文件夹下的slaves里加上localhost 才能跑起来 datanode  不知道是不是只有我这样..</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=855#respond" onclick="return addComment.moveForm( &quot;div-comment-855&quot;, &quot;855&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给昶">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-856" class="comment byuser comment-author-caiminxing bypostauthor even depth-2">
+			<article id="div-comment-856" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-856">
+							<time datetime="2016-04-19T14:16:40+00:00">
+								2016-04-19 14:16							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>slaves 默认就是只有一行 localhost</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=856#respond" onclick="return addComment.moveForm( &quot;div-comment-856&quot;, &quot;856&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-807" class="comment odd alt thread-even depth-1 parent">
+			<article id="div-comment-807" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://t.qq.com/l4603799919" rel="external nofollow" class="url">李祥泰</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-807">
+							<time datetime="2016-04-11T22:04:06+00:00">
+								2016-04-11 22:04							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>楼主，创建Hadoop用户有什么用呢？？如果直接把权限给自己Unbuntu的用户不行吗？？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=807#respond" onclick="return addComment.moveForm( &quot;div-comment-807&quot;, &quot;807&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给李祥泰">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-810" class="comment byuser comment-author-caiminxing bypostauthor even depth-2">
+			<article id="div-comment-810" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="http://www.powerxing.com/" rel="external nofollow" class="url">给力星</a></b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-810">
+							<time datetime="2016-04-12T15:16:40+00:00">
+								2016-04-12 15:16							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>最主要的只是方便部署，避免一些不必要的麻烦。<br>
+特别是在搭建集群的时候，Master和Slave节点应该是要使用相同的用户名。</p>
+<p>简单的说，不用hadoop也可以，我有试过，但可能会遇到一些本教程中没提到的问题。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=810#respond" onclick="return addComment.moveForm( &quot;div-comment-810&quot;, &quot;810&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给给力星">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-723" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-723" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">bu</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-723">
+							<time datetime="2016-03-31T15:21:33+00:00">
+								2016-03-31 15:21							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>真心找到一个版本匹配的了，网上关于hadoop的配置五花八门，虽然反反复复就是那么几步，但由于新旧版本之间的差距，就是配置不成功，感谢楼主的细心讲解，收益颇多，谢谢~</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=723#respond" onclick="return addComment.moveForm( &quot;div-comment-723&quot;, &quot;723&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给bu">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-624" class="comment even thread-even depth-1">
+			<article id="div-comment-624" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">tiaotiao</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-624">
+							<time datetime="2016-03-16T12:14:18+00:00">
+								2016-03-16 12:14							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>写的很清楚，赞</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=624#respond" onclick="return addComment.moveForm( &quot;div-comment-624&quot;, &quot;624&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给tiaotiao">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-610" class="comment odd alt thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-610" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">Hi</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-610">
+							<time datetime="2016-03-07T11:09:29+00:00">
+								2016-03-07 11:09							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>如果有 Hadoop Job 的教程就更好了，呵呵</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=610#respond" onclick="return addComment.moveForm( &quot;div-comment-610&quot;, &quot;610&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Hi">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-724" class="comment even depth-2">
+			<article id="div-comment-724" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">bu</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-724">
+							<time datetime="2016-03-31T15:22:32+00:00">
+								2016-03-31 15:22							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>hadoop权威指南还可以，值得一看。</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=724#respond" onclick="return addComment.moveForm( &quot;div-comment-724&quot;, &quot;724&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给bu">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-606" class="comment odd alt thread-even depth-1 parent">
+			<article id="div-comment-606" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">Hadoop</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-606">
+							<time datetime="2016-03-04T13:44:55+00:00">
+								2016-03-04 13:44							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>我按照你的教程，不过是安装的hadoop-2.7.2，启动了 YARN 以后，没有 NodeManager 和 ResourceManager，有一个 JobHistoryServer，监听端口也不是 8088，而是：19888、10033、10020<br>
+不知道对吗？</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=606#respond" onclick="return addComment.moveForm( &quot;div-comment-606&quot;, &quot;606&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Hadoop">回复</a></div>			</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-607" class="comment even depth-2">
+			<article id="div-comment-607" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn">Hadoop</b><span class="says">说道：</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="http://www.powerxing.com/install-hadoop-in-centos/#comment-607">
+							<time datetime="2016-03-04T15:22:02+00:00">
+								2016-03-04 15:22							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>是我有一个没有启动，启动了就好了，谢谢</p>
+				</div><!-- .comment-content -->
+
+				<div class="reply"><a rel="nofollow" class="comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/?replytocom=607#respond" onclick="return addComment.moveForm( &quot;div-comment-607&quot;, &quot;607&quot;, &quot;respond&quot;, &quot;272&quot; )" aria-label="回复给Hadoop">回复</a></div>			</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+	
+	
+					<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.powerxing.com/install-hadoop-in-centos/#respond" style="display:none;">取消回复</a></small></h3>				<form action="http://www.powerxing.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate="">
+					<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span></p><p class="comment-form-comment"><label for="comment">评论</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">姓名</label> <input id="author" name="author" type="text" value="" size="30" maxlength="245"></p>
+<p class="comment-form-email"><label for="email">电子邮件</label> <input id="email" name="email" type="email" value="" size="30" maxlength="100" aria-describedby="email-notes"></p>
+<p class="comment-form-url"><label for="url">站点</label> <input id="url" name="url" type="url" value="" size="30" maxlength="200"></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="发表评论"> <input type="hidden" name="comment_post_ID" value="272" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"></p>				<input type="hidden" id="ak_js" name="ak_js" value="1511750860421"></form>
+					</div><!-- #respond -->
+		
+</div><!-- #comments -->
+				
+	</div>
+</div><!-- .row -->
+
+	<div class="row">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-9 site-footer">
+			© 2014 <a href="http://www.powerxing.com/">给力星</a>
+		</div>
+	</div>
+</div><!-- .container -->
+<script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/form.js"></script>
+<link rel="stylesheet" id="yarppRelatedCss-css" href="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/related.css" type="text/css" media="all">
+<script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/comment-reply.min.js"></script>
+<script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/prettify.js"></script>
+<script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/power.js"></script>
+<script type="text/javascript" src="./Hadoop安装教程_单机_伪分布式配置_CentOS6.4_Hadoop2.6.0_给力星_files/wp-embed.min.js"></script>
+
+<div class="back-to-top" id="back-to-top" title="嗖的就上去了！"><span><i class="fa fa-chevron-up"></i></span></div></body></html>
