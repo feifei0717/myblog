@@ -1,12 +1,10 @@
 # com.googlecode.log4jdbc的使用方法
 
-## 1.JDBC配置
-
- 
+## 说明
 
 log4jdbc:jdbc层的一个日志框架
 
- 
+## 1.JDBC配置
 
   maven依赖： 
 
@@ -40,9 +38,9 @@ jdbc.username=root
 jdbc.password=123456
 ```
 
-## 2.log4j配置
+## 2.日志层配置
 
- 
+### log4j配置
 
 ```
 log4j.logger.jdbc.sqlonly=OFF  
@@ -52,9 +50,7 @@ log4j.logger.jdbc.resultset=OFF
 log4j.logger.jdbc.connection=OFF  
 ```
 
-logback配置
-
- 
+### logback配置
 
 ```
     <!--sql 打印在控制台 Log4jdbc 日志种类都可以设置为 DEBUG , INFO 或 ERROR 级别。当设置为 FATAL 或 OFF 时，意味关闭记录。-->
@@ -75,10 +71,9 @@ logback配置
 
 ## 3.运行测试结果
 
- 
-
+```
 [INFO][2014-08-17 21:50:48,533][jdbc.sqltiming]select organizati0_.id as id1_0_0_, organizati0_.locked as locked2_0_0_, organizati0_.name as name3_0_0_, organizati0_.parentId as parentId4_0_0_, organizati0_.code as code5_0_0_, organizati0_.type as type6_0_0_ from cz_branch organizati0_ where organizati0_.id=3 
-
 {executed in 1 msec} 
+```
 
 来源： <http://hbczlp.iteye.com/blog/2105311>
