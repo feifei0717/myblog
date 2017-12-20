@@ -241,7 +241,7 @@ public class TestActiveProfile {
 
 上面介绍了如何使用Profile以及在单元测试的环境下激活指定的Profile，除了使用@ActiveProfiles注解来激活profile外，Spring还提供了其他的几种激活Profile，这些方式在实际的开发中使用的更多。Spring通过两个不同属性来决定哪些profile可以被激活(注意：profile是可以同时激活多个的),一个属性是spring.profiles.active和spring.profiles.default。这两个常量值在Spring的AbstractEnvironment中有定义，查看AbstractEnvironment源码：
 
-```
+```java
     /**
      * Name of property to set to specify active profiles: {@value}. Value may be comma
      * delimited.

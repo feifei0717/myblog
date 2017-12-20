@@ -1,10 +1,10 @@
-在guava库中，自带了过滤器(filter)的功能，可以用来对collection 进行过滤，先看例子： 
+# Guava中针对集合的 filter和过滤功能
 
-  
+在guava库中，自带了过滤器(filter)的功能，可以用来对collection 进行过滤，先看例子： 
 
 Java代码  
 
-```
+```java
 @Test  
 public void whenFilterWithIterables_thenFiltered() {  
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");  
@@ -20,7 +20,7 @@ public void whenFilterWithIterables_thenFiltered() {
 
 Java代码  
 
-```
+```java
 @Test  
 public void whenFilterWithCollections2_thenFiltered() {  
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");  
@@ -44,25 +44,16 @@ com.google.common.base. Predicate : 根据输入值得到 true 或者 false
 
 Java代码  
 
-```
-Collection<Integer> filterList = Collections2.filter(collections  
-  
+```java
+Collection<Integer> filterList = Collections2.filter(collections
      , new Predicate<Integer>(){  
-  
                   @Override  
-  
-                  public boolean apply(Integer input) {  
-  
+                  public boolean apply(Integer input) {
                         if(input > 4)  
-  
                               return false;  
-  
                         else  
-  
                               return true;  
-  
                   }  
-  
 });  
 ```
 
@@ -70,17 +61,12 @@ Collection<Integer> filterList = Collections2.filter(collections
 
 Java代码  
 
-```
-List<String> c2 = Lists.transform(list, new Function<Integer , String>(){  
-  
-                  @Override  
-  
-                  public String apply(Integer input) {  
-  
-                        return String.valueOf(input) + "test";  
-  
-                  }              
-  
+```java
+List<String> c2 = Lists.transform(list, new Function<Integer , String>(){   
+                  @Override   
+                  public String apply(Integer input) {   
+                        return String.valueOf(input) + "test";   
+                  }               
 });  
 ```
 
