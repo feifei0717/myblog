@@ -1,4 +1,4 @@
-# 详解log4j2(上) - 从基础到实战
+# 详解log4j2之从基础到实战
 
 原创 2016年04月20日 23:23:39
 
@@ -11,8 +11,8 @@ log4j2相对于log4j 1.x有了脱胎换骨的变化，其官网宣称的优势�
 普通java项目手动添加jar包
 
 ```
-log4j-api-2.5.jar  
-log4j-core-2.5.jar 
+log4j-api-2.9.1.jar  
+log4j-core-2.9.1.jar 
 ```
 
 Maven项目pom.xml
@@ -22,28 +22,49 @@ Maven项目pom.xml
     <dependency>  
         <groupId>org.apache.logging.log4j</groupId>  
         <artifactId>log4j-api</artifactId>  
-        <version>2.5</version>  
+        <version>2.9.1</version>  
     </dependency>  
     <dependency>  
         <groupId>org.apache.logging.log4j</groupId>  
         <artifactId>log4j-core</artifactId>  
-        <version>2.5</version>  
+        <version>2.9.1</version>  
     </dependency>  
 </dependencies>  
 ```
 
 测试代码
 
-```
-public static void main(String[] args) {  
-    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);  
-    logger.trace("trace level");  
-    logger.debug("debug level");  
-    logger.info("info level");  
-    logger.warn("warn level");  
-    logger.error("error level");  
-    logger.fatal("fatal level");  
+```java
+package com.practice.javase;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * <B>Description:</B>  <br>
+ * <B>Create on:</B> 2017/12/18 上午9:44 <br>
+ *
+ * @author xiangyu.ye
+ * @version 1.0
+ */
+public class MainTest {
+    private Logger logger = LogManager.getLogger(this.getClass());
+//    private Logger logger = LogManager.getLogger(MainTest.class);
+
+    public static void main(String[] args) {
+        new MainTest().printLog();
+    }
+
+    private void printLog() {
+        logger.trace("trace level");
+        logger.debug("debug level");
+        logger.info("info level");
+        logger.warn("warn level");
+        logger.error("error level");
+        logger.fatal("fatal level {}  {}","测试占位符1","测试占位符2");
+    }
 }
+
 ```
 
 运行后输出
@@ -58,20 +79,20 @@ log4j2默认会在classpath目录下寻找log4j.json、log4j.jsn、log4j2.xml等
 
 下面我们按默认配置添加一个log4j2.xml，添加到src根目录即可
 
-```重新执行测试代码，可以看到输出结果相同，但是没有再提示找不到配置文件。 来看我们添加的配置文件log4j2.xml，以Configuration为根节点，有一个status属性，这个属性表示log4j2本身的日志信息打印级别。如果把status改为TRACE再执行测试代码，可以看到控制台中打印了一些log4j加载插件、组装logger等调试信息。
-<?xml version="1.0" encoding="UTF-8"?>  
-<Configuration status="WARN">  
-    <Appenders>  
-        <Console name="Console" target="SYSTEM_OUT">  
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />  
-        </Console>  
-    </Appenders>  
-    <Loggers>  
-        <Root level="error">  
-            <AppenderRef ref="Console" />  
-        </Root>  
-    </Loggers>  
-</Configuration> 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - [%M] %L: %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>
 ```
 
 重新执行测试代码，可以看到输出结果相同，但是没有再提示找不到配置文件。
@@ -109,7 +130,7 @@ log4j2默认会在classpath目录下寻找log4j.json、log4j.jsn、log4j2.xml等
 
 首先修改测试代码
 
-```
+```java
 public static void main(String[] args) {  
     Logger logger = LogManager.getLogger("mylog");  
     logger.trace("trace level");  
@@ -123,7 +144,7 @@ public static void main(String[] args) {
 
 下面修改配置文件
 
-```
+```xml
 <Configuration status="WARN" monitorInterval="300">  
     <Appenders>  
         <Console name="Console" target="SYSTEM_OUT">  
@@ -149,7 +170,7 @@ additivity="false"表示在该logger中输出的日志不会再延伸到父层lo
 
 修改配置文件，添加一个文件类型的Appender，并且把mylog的AppenderRef改为新加的Appender
 
-```
+```xml
 <Configuration status="WARN" monitorInterval="300">  
     <Appenders>  
         <Console name="Console" target="SYSTEM_OUT">  
@@ -180,7 +201,7 @@ Rolling的意思是当满足一定条件后，就重命名原日志文件用于�
 
 看下面的配置
 
-```
+```xml
 <Configuration status="WARN" monitorInterval="300">  
     <properties>  
         <property name="LOG_HOME">D:/logs</property>  
@@ -259,7 +280,7 @@ public static void main(String[] args) {
 
 log4j2默认在classpath下查找配置文件，可以修改配置文件的位置。在非web项目中：
 
-```
+```java
 public static void main(String[] args) throws IOException {  
     File file = new File("D:/log4j2.xml");  
     BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));  
@@ -284,3 +305,9 @@ public static void main(String[] args) throws IOException {
 ```
 
 掌握这些基本可以实际使用了，下篇介绍一些高级应用，异步Appender、MongoDB Appender和基于Filters的按级别输出到不同文件的设置
+
+
+
+
+
+http://blog.csdn.net/autfish/article/details/51203709
