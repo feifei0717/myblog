@@ -1,4 +1,4 @@
-# JAVA调用ORACLE数据库存储过程
+# java调用oracle数据库存储过程
 
 ##  ConnUtils连接工具类
 
