@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Log4j 2.6免垃圾收集
 
 Java语言中流行的日志库Log4j的最新版本Log4j 2.6，将引入一系列选项以[运行在免垃圾回收模式](https://logging.apache.org/log4j/2.x/manual/garbagefree.html)。该发布继续跟随前几个发布版，尝试提升日志库的性能，并且已经得到业界的积极响应。据性能改进倡议的引导者Remko Popm透露，下一步将会增加log4j可以运行在免垃圾回收模式的场景数量。
