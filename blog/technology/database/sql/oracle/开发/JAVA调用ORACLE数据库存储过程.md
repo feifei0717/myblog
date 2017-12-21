@@ -1,25 +1,10 @@
-# JAVA调用数据库存储过程
+# JAVA调用ORACLE数据库存储过程
 
-分类: database
-日期: 2014-09-11
-
-原文地址: 
-
-http://blog.chinaunix.net/uid-29632145-id-4465615.html
-
-------
-
-****[JAVA调用数据库存储过程]() *2014-09-11 12:04:26*
-
-分类： Mysql/postgreSQL
-
-## 下面将举出JAVA对ORACLE数据库存储过程的调用
-
-​         
+##  ConnUtils连接工具类
 
 ConnUtils连接工具类：用来获取连接、释放资源
 
-```
+```Java
 package com.ljq.test;
 
 import java.sql.Connection;
@@ -100,19 +85,9 @@ public final class ConnUtils {
 
 ​             
 
-创建带出参存储过程代码：
+## 创建带入参和出参存储过程
 
-```
---带出参存储过程
-CREATE OR REPLACE PROCEDURE stu_proc(v_name OUT VARCHAR2) AS
-BEGIN 
-  SELECT o.sname INTO v_name FROM student o where o.id = 2;
-END;
-```
-
-​         
-
-使用java调用带出参的存储过程
+代码：
 
 ```
 --带出参存储过程
@@ -123,8 +98,6 @@ END;
 ```
 
 
-
-​             
 
 创建带出入参存储过程代码
 
@@ -138,11 +111,9 @@ END;
 
 ​           
 
-使用JAVA调用带出入参存储过程
+## 使用JAVA调用带出入参存储过程
 
-
-
-```
+```java
 package com.ljq.test;
 
 import java.sql.CallableStatement;
