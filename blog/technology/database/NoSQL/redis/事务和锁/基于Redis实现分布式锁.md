@@ -1,3 +1,5 @@
+[toc]
+
 # [基于Redis实现分布式锁](http://blog.csdn.net/ugg/article/details/41894947)
 
 ## 背景
