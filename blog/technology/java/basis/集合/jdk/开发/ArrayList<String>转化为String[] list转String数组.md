@@ -1,3 +1,5 @@
+# ArrayList\<String>转化为String[] list转String数组
+
 初始化数据：
 
 ```

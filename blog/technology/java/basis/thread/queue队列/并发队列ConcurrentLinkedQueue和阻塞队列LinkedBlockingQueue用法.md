@@ -8,7 +8,7 @@
 
 **由于LinkedBlockingQueue实现是线程安全的，实现了先进先出等特性，是作为生产者消费者的首选**，LinkedBlockingQueue 可以指定容量，也可以不指定，不指定的话，默认最大是Integer.MAX_VALUE，其中主要用到put和take方法，put方法在队列满的时候会阻塞直到有队列成员被消费，take方法在队列空的时候会阻塞，直到有队列成员被放进来。
 
-```
+```java
 package cn.thread;
 
 import java.util.concurrent.BlockingQueue;
@@ -127,7 +127,7 @@ public class BlockingQueueTest2 {
 ConcurrentLinkedQueue是Queue的一个安全实现．Queue中元素按FIFO原则进行排序．采用CAS操作，来保证元素的一致性。
 LinkedBlockingQueue是一个线程安全的阻塞队列，它实现了BlockingQueue接口，BlockingQueue接口继承自java.util.Queue接口，并在这个接口的基础上增加了take和put方法，这两个方法正是队列操作的阻塞版本
 
-```
+```java
 package cn.thread;
 
 import java.util.concurrent.ConcurrentLinkedQueue;

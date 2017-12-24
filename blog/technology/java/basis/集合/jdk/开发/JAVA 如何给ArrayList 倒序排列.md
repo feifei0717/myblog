@@ -1,3 +1,5 @@
+# JAVA 如何给ArrayList 倒序排列
+
 for(String temp:list){
 
 ​    System.out.println(temp);
