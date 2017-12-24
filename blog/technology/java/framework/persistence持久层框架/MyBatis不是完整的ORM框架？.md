@@ -1,5 +1,7 @@
 # MyBatis不是完整的ORM框架？
 
+对象关系映射（英语：(Object Relational Mapping，简称*ORM*，或O/RM，或O/R mapping）
+
 - JPA是orm框架标准，主流的orm框架都实现了这个标准。
 - MyBatis没有实现JPA，他和orm框架的设计思路完全不一样。
 - MyBatis是拥抱sql，而orm则更靠近面向对象，不建议写sql，实在要写推荐你写hql代替。
