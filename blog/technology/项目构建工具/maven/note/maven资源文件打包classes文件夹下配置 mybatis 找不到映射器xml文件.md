@@ -1,4 +1,4 @@
-# mybatis 找不到映射器xml文件
+# maven资源文件打包classes文件夹下配置 mybatis 找不到映射器xml文件
 
 **原因：(参考：http://www.linuxidc.com/Linux/2015-06/118877.htm)**
 
