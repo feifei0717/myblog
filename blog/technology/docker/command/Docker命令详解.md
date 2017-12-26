@@ -298,7 +298,7 @@ stats     Display a live stream of container(s) resource usage statistics       
 
 ### run
 
-```
+```sh
     run       Run a command in a new container   
               --让创建的容器立刻进入运行状态，该命令等同于docker create创建容器后再使用docker start启动容器
               例如运行mysql为例：docker run --name=mysqlserver -d -i -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql 
@@ -309,6 +309,7 @@ stats     Display a live stream of container(s) resource usage statistics       
                                -e 设置容器运行所需要的环境变量
                                -d 在后台运行容器并打印容器ID
                                -v 一个宿主机上的目录挂载到镜像里,具体查看文章：docker run -v 挂载本地目录
+                               --tty , -t		分配一个伪TTY
 ```
 
 ## 镜像管理命令：
