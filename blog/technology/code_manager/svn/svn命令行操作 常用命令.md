@@ -1,4 +1,6 @@
-#  [mac终端下svn常用命令](http://www.cnblogs.com/luckythan/p/4478706.html)
+[TOC]
+
+#  mac终端下svn常用命令
 
 svn基本的操作流程就是：
 
