@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # mysql分区功能详细介绍，以及实例
 
 ## 一，什么是数据库分区
@@ -20,9 +24,11 @@
 
 我觉着吧，mysql的分区只有一种方式，只不过运用不同的算法，規则将数据分配到不同的区块中而已。
 
-### 1，mysql5.1及以上支持分区功能
+### 检查是否支持分区功能
 
 **说明： mysql 5.1和之前只要用merge 引擎分区，只能支持MyISAM**
+
+mysql5.1及以上支持分区功能
 
 安装安装的时候，我们就可以查看一下
 
@@ -55,7 +61,7 @@ mysql> show variables like "%part%";
 3.5.7以前的版本显示分区的执行计划使用：explain PARTITIONS；5.7以后直接执行：explain
 ```
 
-### 2，range分区
+### 1，range分区
 
 按照RANGE分区的表是通过如下一种方式进行分区的，每个分区包含那些分区表达式的值位于一个给定的连续区间内的行
 
@@ -199,9 +205,9 @@ ROW_FORMAT=COMPACT
 INSERT INTO `commodity`.`wh_sku_num_log` ( `warehouse_code`, `sku_id`, `before_qty`, `after_qty`, `prog`, `create_time`) VALUES ( '', '90224657686', '6', '5', '', '2015-12-30 13:49:30');
 ```
 
-### 3，list分区
+### 2，list分区
 
-LIST分区中每个分区的定义和选择是基于某列的值从属于一个值列表集中的一个值，而RANGE分 区是从属于一个连续区间值的集合。
+LIST分区中每个分区的定义和选择是基于某列的值从属于一个值列表集中的一个值，而RANGE分区是从属于一个连续区间值的集合。
 
  
 
@@ -242,7 +248,7 @@ Query OK, 0 rows affected (0.33 sec)
 
 如果对数据进行测试，请参考range分区的测试来操作
 
-### 4，hash分区
+### 3，hash分区
 
 HASH分区主要用来确保数据在预先确定数目的分区中平均分布，你所要做的只是基于将要被哈希的列值指定一个列值或表达式，以 及指定被分区的表将要被分割成的分区数量。
 
@@ -262,7 +268,7 @@ Query OK, 0 rows affected (0.06 sec)
 
 测试请参考range分区的操作
 
-### 5，key分区
+### 4，key分区
 
 按照KEY进行分区类似于按照HASH分区，除了HASH分区使用的用 户定义的表达式，而KEY分区的 哈希函数是由MySQL 服务器提供。
 
@@ -280,7 +286,7 @@ Query OK, 0 rows affected (0.07 sec)
 
 测试请参考range分区的操作
 
-### 6，子分区
+### 5，子分区
 
 子分区是分区表中每个分区的再次分割，子分区既可以使用HASH希分区，也可以使用KEY分区。这 也被称为复合分区（composite partitioning）。
 
@@ -290,7 +296,7 @@ Query OK, 0 rows affected (0.07 sec)
 
 3，同一分区内的子分区，名字不相同，不同分区内的子分区名子可以相同（5.1.50不适用）
 
-```
+```mysql
  mysql> CREATE TABLE IF NOT EXISTS `sub_part` (  
  ->   `news_id` int(11) NOT NULL  COMMENT '新闻ID',  
  ->   `content` varchar(1000) NOT NULL DEFAULT '' COMMENT '新闻内容',  
