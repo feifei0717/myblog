@@ -1,5 +1,7 @@
 # Guava中针对集合的 filter和过滤功能
 
+## Iterables.filter
+
 在guava库中，自带了过滤器(filter)的功能，可以用来对collection 进行过滤，先看例子： 
 
 Java代码  
@@ -15,6 +17,10 @@ public void whenFilterWithIterables_thenFiltered() {
 ```
 
   在这个例子中，给出一个list，过滤出含有字母a的元素 
+
+## Collections2.filter
+
+### 根据字符串包含某值过滤
 
 此外，可以使用Collections2.filter() 去进行过滤 
 
@@ -35,6 +41,10 @@ public void whenFilterWithCollections2_thenFiltered() {
 ```
 
   这里注意的是，Collections2.filter中，当在上面的result中增加了元素后，会直接影响原来的names这个list的，就是names中的集合元素是5了。 
+
+
+
+### 根据predicates判断true false过滤
 
   再来看下predicates判断语言， 
 
@@ -57,6 +67,10 @@ Collection<Integer> filterList = Collections2.filter(collections
 });  
 ```
 
+
+
+## Lists.transform
+
 把Lis<Integer>中的Integer类型转换为String , 并添加test作为后缀字符： 
 
 Java代码  
@@ -70,15 +84,19 @@ List<String> c2 = Lists.transform(list, new Function<Integer , String>(){
 });  
 ```
 
+
+
+
+
+## 其它例子
+
 需要说明的是每次调用返回都是新的对象，同时操作过程不是线程安全的。 
 
 ​    再来点例子： 
 
-  
-
 Java代码  
 
-```
+```java
 @Test  
 public void whenFilterCollectionWithCustomPredicate_thenFiltered() {  
     Predicate<String> predicate = new Predicate<String>() {  
