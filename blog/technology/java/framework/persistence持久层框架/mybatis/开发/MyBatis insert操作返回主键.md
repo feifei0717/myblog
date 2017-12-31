@@ -4,7 +4,7 @@
 
 #### 针对Sequence主键而言，在执行insert sql前必须指定一个主键值给要插入的记录，如Oracle、DB2，可以采用如下配置方式：
 
-```
+```xml
 <insert id="add" parameterType="vo.Category">
 		<selectKey resultType="java.lang.Short" order="BEFORE" keyProperty="id">
 			SELECT SEQ_TEST.NEXTVAL FROM DUAL
@@ -25,7 +25,7 @@
 
 #### 针对自增主键的表，在插入时不需要主键，而是在插入过程自动获取一个自增的主键，比如MySQL，可以采用如下两种配置方式：
 
-```
+```xml
 <insert id="add" parameterType="vo.Category" useGeneratedKeys="true" keyProperty="id">
 		insert into category (name_zh, parent_id,
 		show_order, delete_status, description
@@ -41,7 +41,7 @@
 
 或
 
-```
+```xml
 <insert id="add" parameterType="vo.Category">
 		<selectKey resultType="java.lang.Short" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() AS id
