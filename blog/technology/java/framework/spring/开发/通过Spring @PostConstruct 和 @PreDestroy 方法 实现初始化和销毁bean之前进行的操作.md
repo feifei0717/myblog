@@ -1,4 +1,8 @@
-# [通过Spring @PostConstruct 和 @PreDestroy 方法 实现初始化和销毁bean之前进行的操作](http://blog.csdn.net/topwqp/article/details/8681497)
+[TOC]
+
+
+
+# 通过Spring @PostConstruct 和 @PreDestroy 方法 实现初始化和销毁bean之前进行的操作
 
 关于在spring  容器初始化 bean 和销毁前所做的操作定义方式有三种：
 
