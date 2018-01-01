@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Spring定时任务的几种实现
 
 近日项目开发中需要执行一些定时任务，比如需要在每天凌晨时候，分析一次前一天的日志信息，借此机会整理了一下定时任务的几种实现方式，由于项目采用spring框架，所以我都将结合
@@ -42,10 +46,6 @@ spring框架来介绍。
 
 **第一步：定义作业类**
 
- 
-
-Java代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
-
 ```
 import org.quartz.JobExecutionContext;  
 import org.quartz.JobExecutionException;  
@@ -72,7 +72,7 @@ throws JobExecutionException {
 
 **第二步：spring配置文件中配置作业类JobDetailBean**
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <bean name="job1" class="org.springframework.scheduling.quartz.JobDetailBean">  
@@ -99,10 +99,6 @@ org.springframework.scheduling.quartz.CronTriggerBean
 
 配置方式如下：
 
- 
-
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
-
 ```
 <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">  
 <property name="jobDetail" ref="job1" />  
@@ -115,8 +111,6 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 配置方式如下：
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
-
 ```
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
 <property name="jobDetail" ref="job1" />  
@@ -128,8 +122,6 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
  关于cronExpression表达式的语法参见附录。
 
 **第四步：配置调度工厂 **
-
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
 
 ```
 <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
@@ -161,7 +153,7 @@ org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean
 
 **第一步：编写任务类**
 
-Java代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 public class Job2 {  
@@ -175,7 +167,7 @@ System.out.println("不继承QuartzJobBean方式-调度进行中...");
 
 **第二步：配置作业类**
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <bean id="job2"  
@@ -202,7 +194,7 @@ org.springframework.scheduling.quartz.CronTriggerBean
 
 配置方式如下：
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">  
@@ -216,7 +208,7 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 配置方式如下：
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
@@ -230,7 +222,7 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 **第四步：配置调度工厂 **
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
@@ -268,7 +260,7 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 即普通的pojo，如下：
 
-Java代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 import org.springframework.stereotype.Service;  
@@ -283,7 +275,7 @@ public class TaskJob {
 
 **第二步：在spring配置文件头中添加命名空间及描述**
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 <beans xmlns="http://www.springframework.org/schema/beans"  
@@ -294,19 +286,19 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 **第三步：spring配置文件中设置具体的任务**
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
  <task:scheduled-tasks>   
         <task:scheduled ref="taskJob" method="job1" cron="0 * * * * ?"/>   
 </task:scheduled-tasks>  
   
-<context:component-scan base-package=" com.gy.mytask " />  
+<context:component-scan base-package="com.gy.mytask " />  
 ```
 
 说明：ref参数指定的即任务类，method指定的即需要运行的方法，cron及cronExpression表达式，具体写法这里不介绍了，详情见上篇文章附录。
 
-<context:component-scan base-package="com.gy.mytask" />这个配置不消多说了，spring扫描注解用的。
+\<context:component-scan base-package="com.gy.mytask" />这个配置不消多说了，spring扫描注解用的。
 
 到这里配置就完成了，是不是很简单。
 
@@ -314,7 +306,7 @@ Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http
 
 也许我们不想每写一个任务类还要在xml文件中配置下，我们可以使用注解@Scheduled，我们看看源文件中该注解的定义：
 
-Java代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
+ 
 
 ```
 @Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.ANNOTATION_TYPE})  
@@ -344,9 +336,7 @@ fixedRate：官方文档解释：An interval-based trigger where the interval is
 
 **第一步：编写pojo**
 
-Java代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
-
-```
+```java
 import org.springframework.scheduling.annotation.Scheduled;    
 import org.springframework.stereotype.Component;  
   
@@ -361,9 +351,7 @@ public class TaskJob {
 
 **第二步：添加task相关的配置：**
 
-Xml代码 [![复制代码](http://gong1208.iteye.com/images/icon_copy.gif)](http://gong1208.iteye.com/blog/1773177#) [![收藏代码](http://gong1208.iteye.com/images/icon_star.png)](%2E:void())
-
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>  
 <beans xmlns="http://www.springframework.org/schema/beans"  
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"  
@@ -389,7 +377,7 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
     <task:scheduler id="qbScheduler" pool-size="10"/>  
 ```
 
-说明：理论上只需要加上<task:annotation-driven />这句配置就可以了，这些参数都不是必须的。
+说明：理论上只需要加上\<task:annotation-driven />这句配置就可以了，这些参数都不是必须的。
 
  
 
