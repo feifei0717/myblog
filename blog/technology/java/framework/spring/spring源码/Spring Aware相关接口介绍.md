@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Spring Aware相关接口介绍
 
 Aware，是感应和感知的意思。当bean实现了对应的Aware接口时，BeanFactory会在生产bean时根据它所实现的Aware接口，给bean注入对应的属性，从而让bean获取外界的信息，也可以让开发者取得一些相对的资源。
@@ -14,7 +18,7 @@ Spring提供了一堆Aware接口：
 
 实现类的实例将会获取ApplicationContext的引用,因此可以编程式的使用ApplicationContext手动创建bean.
 
-```
+```java
 public interface ApplicationContextAware {
     void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
 }
@@ -22,7 +26,7 @@ public interface ApplicationContextAware {
 
 自Spring2.5起，可使用自动装配模式获取ApplicationContext引用：
 
-```
+```java
 @RestController
 public class HelloWorldController2 {
     @Autowired
@@ -49,9 +53,7 @@ public class HelloWorldController2 {
 
 实例代码：
 
-```
-package org.company.xxx;
-
+```java
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -121,7 +123,7 @@ public interface BeanNameAware {
 
 现在新建一个AwareTest类，实现了BeanNameAware和ApplicationContextAware接口，代码如下：
 
-```
+```java
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -164,7 +166,7 @@ public class AwareTest implements BeanNameAware, ApplicationContextAware, BeanFa
 
 FootballPlayer类：
 
-```
+```java
 public class FootballPlayer {
     private String name;
     private String team;
@@ -199,7 +201,7 @@ public class FootballPlayer {
 
 beans.xml：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

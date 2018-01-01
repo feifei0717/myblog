@@ -1,10 +1,10 @@
- 
+[TOC]
 
-# [Spring3.2新注解@ControllerAdvice](http://blog.csdn.net/z69183787/article/details/48881033)
+# Spring3.2新注解@ControllerAdvice
 
 @ControllerAdvice，是spring3.2提供的新注解，从名字上可以看出大体意思是控制器增强。让我们先看看@ControllerAdvice的实现：
 
-```
+```java
 @Target(ElementType.TYPE)  
 @Retention(RetentionPolicy.RUNTIME)  
 @Documented  
@@ -22,7 +22,7 @@ public @interface ControllerAdvice {
 
 写道
 
-```
+```java
 /**
 * Indicates the annotated class assists a "Controller".
 *
@@ -40,15 +40,9 @@ public @interface ControllerAdvice {
 
 即把@ControllerAdvice注解内部使用@ExceptionHandler、@InitBinder、@ModelAttribute注解的方法应用到所有的 @RequestMapping注解的方法。非常简单，不过只有当使用@ExceptionHandler最有用，另外两个用处不大。
 
- 
-
- 
-
 接下来看段代码：
 
- 
-
-```
+```java
 @ControllerAdvice  
 public class ControllerAdviceTest {  
   
@@ -76,7 +70,7 @@ public class ControllerAdviceTest {
 
 如果你的[spring](http://lib.csdn.net/base/javaee)-mvc配置文件使用如下方式扫描bean
 
-```
+```xml
 <context:component-scan base-package="com.sishuok.es" use-default-filters="false">  
        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
    </context:component-scan>  
@@ -84,7 +78,7 @@ public class ControllerAdviceTest {
 
  需要把@ControllerAdvice包含进来，否则不起作用：
 
-```
+```xml
 <context:component-scan base-package="com.sishuok.es" use-default-filters="false">  
        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>  
