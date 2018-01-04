@@ -2,7 +2,7 @@
 
 ### 测试代码:
 
-```
+```Java
 package com.soco.fastjsontest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -165,9 +165,7 @@ public class FastjsonMain {
 
 ### 实体 entity:
 
- 
-
-```
+```Java
 package com.soco.fastjsontest.entity;
 import java.util.Date;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -220,7 +218,7 @@ public class Student {
 
 ```
 
-```
+```Java
 package com.soco.fastjsontest.entity;
 import java.util.Date;
 public class Employee {
@@ -273,15 +271,12 @@ public class Employee {
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", age=" + age + ", birthday=" + birthday + "]";
 	}
-	
-	
- 
 }
 ```
 
 
 
-```
+```Java
 package com.soco.fastjsontest.entity;
 import java.util.Date;
 import java.util.List;
@@ -326,10 +321,6 @@ public class Dept {
 	public String toString() {
 		return "Dept [id=" + id + ", name=" + name + ", emps=" + emps + "]";
 	}
-	
-	
-	
-	
 }
 ```
 
