@@ -1,4 +1,4 @@
-# mysql中，写limit得记得排序……
+# mysql中，写limit得记得排序
 
 
 
@@ -24,7 +24,7 @@
 
   `            SELECT * FROM article a where a.type in (1,2,4) limit 20,20;            `
 
- 
+
 
 结果： 
 ![img](./image-201710311740/o_mysql4.bmp)(注意红色部分) 
