@@ -270,9 +270,9 @@ Query OK, 0 rows affected (0.06 sec)
 
 ### 4，key分区
 
-按照KEY进行分区类似于按照HASH分区，除了HASH分区使用的用 户定义的表达式，而KEY分区的 哈希函数是由MySQL 服务器提供。
+按照KEY进行分区类似于按照HASH分区，除了HASH分区使用的用户定义的表达式，而KEY分区的 哈希函数是由MySQL 服务器提供。
 
-```
+```sql
 mysql> CREATE TABLE IF NOT EXISTS `key_part` (  
  ->   `news_id` int(11) NOT NULL  COMMENT '新闻ID',  
  ->   `content` varchar(1000) NOT NULL DEFAULT '' COMMENT '新闻内容',  
