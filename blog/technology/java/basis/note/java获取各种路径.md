@@ -1,3 +1,5 @@
+# java获取各种路径
+
 ### 获取web上传文件目录
 
 //上传文件存放目录  tomcat webapp  WEB-INF下面的uploadFolder文件夹中
@@ -92,13 +94,25 @@ System.out.println("Project Path: {}" + projectPath);
 
 (6) new File("").getAbsolutePath()也可用。
 
-**通过CLASSPATH读取包内文件**
+### **通过CLASSPATH读取包内文件**
 
 读取包内文件，使用的路径一定是相对的classpath路径，比如a，位于包内，此时可以创建读取a的字节流：
 
 InputStream in = ReadFile.class.getResourceAsStream("/com/lavasoft/res/a.txt");
 
 有了字节流，就能读取到文件内容了。
+
+获得file
+
+```Java
+        ClassPathResource classPathResource = new ClassPathResource("/com/practice/a.txt");
+        String s = FileUtils.readFileToString(classPathResource.getFile());
+        System.out.println(s);
+
+        URL resource = Main.class.getResource("/com/practice/a.txt");
+        String s2 = FileUtils.readFileToString(new File(resource.getFile()));
+        System.out.println(s2);
+```
 
  
 
