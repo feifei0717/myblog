@@ -68,7 +68,7 @@ spring的里的resouce的概念, 在我们处理io时很有用.
 10. org.springframework.util.xml.CustomizableThreadCreator
 11. org.springframework.util.xml.DefaultPropertiesPersister
 12. org.springframework.util.xml.DigestUtils摘要处理, 这里有用于md5处理信息的
-13. org.springframework.util.xml.FileCopyUtils文件的拷贝处理, 结合Resource的概念一起来处理, 真的是很方便
+13. org.springframework.util.xml.FileCopyUtils文件的拷贝处理, 结合Resource的概念一起来处理, 真的是很方便
 
 14. org.springframework.util.xml.FileSystemUtils
 
