@@ -1,4 +1,8 @@
-# fastJson解析报 create instance error
+[TOC]
+
+
+
+# fastJson解析报 create instance error 内部类
 
 今天用fastJson解析报 create instance error的错误
 
@@ -28,7 +32,9 @@ set和get方法省略。。。。。
 
 }
 
-### 解决办法：
+## 解决办法：
+
+### 方式一
 
 B嵌套在A里，那么我们要声明内嵌类static属性,如下（这样问题解决）
 
@@ -53,5 +59,16 @@ set和get方法省略。。。。。
 ​              }
 
 }
+
+### 方式二
+
+用gson
+
+```java
+ IncrementSyncQtyRequestVO requestVO = new Gson().fromJson(jsonObject.getString("data"), IncrementSyncQtyRequestVO.class);
+//        IncrementSyncQtyRequestVO requestVO = JSON.parseObject(jsonObject.getString("data"), IncrementSyncQtyRequestVO.class);
+```
+
+
 
 来源： <http://blog.csdn.net/gogolaile/article/details/54631139>

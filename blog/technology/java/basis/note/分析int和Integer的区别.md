@@ -2,7 +2,7 @@
 
 2017.12.22 11:49 字数 672 阅读 991评论 5喜欢 34
 
-- [x] int 和 Integer 哪个会占用更多的内存？ int 和 Integer 有什么区别？相等吗？
+int 和 Integer 哪个会占用更多的内存？ int 和 Integer 有什么区别？相等吗？
 
 ## int和Integer所占内存比较：
 

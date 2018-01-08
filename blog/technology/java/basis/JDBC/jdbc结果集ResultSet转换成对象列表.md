@@ -1,4 +1,4 @@
-将jdbc结果集ResultSet转换成对象列表
+# jdbc结果集ResultSet转换成对象列表
 
 分类: java
 日期: 2014-11-23
@@ -7,11 +7,9 @@
 
 http://blog.chinaunix.net/uid-29632145-id-4642954.html
 
-------
 
-****[将jdbc结果集ResultSet转换成对象列表 ]()*2014-11-23 11:45:52*
 
-分类： Java
+
 
 将jdbc结果集转换成对象列表 
 
