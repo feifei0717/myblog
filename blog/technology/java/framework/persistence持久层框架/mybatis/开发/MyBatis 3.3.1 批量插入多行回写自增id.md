@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # MyBatis 3.3.1 批量插入多行回写自增id
 
 测试代码:/Users/jerryye/backup/studio/AvailableCode/framework/mybatis/mybatis_demo/src/main/java/com/practice/mybatis/spring/test/SpringCRUDTest.java
