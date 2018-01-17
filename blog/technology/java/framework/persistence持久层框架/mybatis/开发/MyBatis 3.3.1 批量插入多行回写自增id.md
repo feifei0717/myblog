@@ -14,7 +14,7 @@
 
 *原文*   [http://blog.csdn.net/top_code/article/details/52404345](javascript:void())
 
-[MyBatis](javascript:void()) 3.3.1支持批量插入多行回写自增id的功能，具体介绍请参看[Support insert multiple rows and write-back id #547](javascript:void())。
+[MyBatis](javascript:void()) 3.3.1支持批量插入多行回写自增id的功能，具体介绍请参看[Support insert multiple rows and write-back id #547](https://github.com/mybatis/mybatis-3/pull/547)。
 
 ### 实现原理
 

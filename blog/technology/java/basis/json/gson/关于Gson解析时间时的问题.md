@@ -28,13 +28,7 @@ com.google.gson.JsonSyntaxException: 1461689198000
 04-27 00:46:51.166 17190-20868/link.ebbinghaus.planning W/System.err:     ... 17 more
 ```
 
-- [2016年04月27日提问](https://segmentfault.com/q/1010000005014254)
-- [评论]()
-- [邀请回答]()
-- [编辑]()
-- [更多****]()
 
-[默认排序](https://segmentfault.com/q/1010000005014254#answers-title)[时间排序](https://segmentfault.com/q/1010000005014254?sort=created#answers-title)
 
 ## 3个回答
 
@@ -62,9 +56,7 @@ gson 反序列成Date.class的做的操作
 
 ![img](关于Gson解析时间时的问题_files/0.4849135973936549.png)
 
-- [2016年04月27日回答](https://segmentfault.com/q/1010000005014254/a-1020000005014338) · [2016年04月27日更新](https://segmentfault.com/q/1010000005014254/a-1020000005014338/revision)
-- [评论]()
-- [编辑]()
+
 
 答案对人有帮助，有参考价值0答案没帮助，是错误的答案，答非所问
 
