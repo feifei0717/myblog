@@ -74,132 +74,512 @@ public class SpringELDemo {
 
 ## SpEL语法
 
-本节介绍下SpEL中的各类语法，在语法中会发现很多熟悉的影子，比如Java，JavaScript, Groovy等等。依次介绍SpEL中的
 
-- 字面量
-- 数组和Map字面量
-- 二元操作符和三元操作符
-- 来自Groovy的操作符
-- 数组列表和Map的访问
-- Java Bean属性访问
-- Java Bean方法调用
-- Java 类型访问
-- Java 实例访问
 
-### 字面量
+### **1. 字面值**
 
-SpEL支持如下类型的字面量：
-
-| 类型   | 说明                         | 示例                       |
-| ---- | -------------------------- | ------------------------ |
-| 数字   | 支持任何数字类型，包括了各种进制的数字，科学计数法等 | 6.0221415E+23，0xFFFFFFFF |
-| 布尔量  |                            | true, false              |
-| 字符串  | 用单引号包围的字符串，单引号要用2个单引号转义    | 'Gangyou''s, Blog'       |
-| 日期   |                            | 没写成功 //TODO              |
-| null | 直接转成字符串null                | null                     |
-
-### 属性
-
-SpEL对属性的访问遵循Java Bean语法，对于表达式中的属性都要提供相应的setter。
-
-比如这样一个Bean:
+我们可以在\<property> 元素的value 属性中使用#{} 界定符把这个值装配到Bean 的属性中，如下例：
 
 ```
-private static class Person {    
-    private String firstName;    
-    private String lastName;    
-    public Person(String firstName, String lastName) {        
-         this.firstName = firstName;        
-         this.lastName = lastName;    
-    }    
-    public String getFirstName() {        
-        return firstName;    
-    }    
-    public String getLastName() {        
-        return lastName;    
-    }
+<bean id = "yoona" class = "com.sjf.bean.Student">
+	<property name="age" value="#{24}"/>
+	<property name="school" value="#{'西电'}"/>
+	<property name="name" value="my name is #{'yoona'}"/>
+	<property name="weight" value="#{120.4}"/>
+	<property name="sex" value="#{true}"/>
+</bean>
+```
+
+第一个SpEL表达式中使用了一个整型：#{24}
+
+第二个SpEL表达式中使用了String类型：#{'西电'} 
+
+**注意**：里面有个单引号，如果去掉会报错。String 类型的字面值可以使用单引号或双引号作为字符串的界定符。如果使用单引号作为XML 属性的界定符则：\<propertyname='school'value='#{"西电"}'/>
+
+第三个SpEL表达式中使用了String类型，并且与非SpEL 表达式的值混用：my name is #{'yoona'}
+
+第四个SpEL表达式中使用了浮点型数字：#{120.4}，也可以采用科学计数法的表示方法：#{'1e4'}  ** **
+
+第五个SpEL表达式中使用布尔值："#{true}"
+
+**运行结果：**
+
+```
+name：my name is yoona   age：24   school：西电 sex：true   weight：120.4
+```
+
+感觉杀鸡焉用牛刀，毕竟，我们没必要使用SpEL 将一个整型的属性赋值为24，或者将Boolean 类型的属性赋值为true。我承认在SpEL 表达式中仅包含字面值没有太多用处。但是复杂的SpEL 表达式通常是由简单的表达式构成的。所以了解如何在SpEL 中使用字面值是很有意义的。
+
+### **2.  引用Bean、Properties 和方法**
+
+#### **2.1 调用引用Bean的属性**
+
+SpEL 表达式能做的另一个事情是通过ID 引用其他Bean。举个例子，我们需要在SpEL 表达式中使用Bean ID 将一个Bean 装配到另一个Bean 的属性中：
+
+```
+<property name="school" value="#{xidianSchool}"/>
+```
+
+上述代码中的SpEL 表达式相当于：
+
+```
+<property name="school" ref="xidianSchool"/>
+```
+
+没错，结果是相同的，我们使用SpEL也没感觉出便利多少。但是有一点是ref做不到的，就是在一个SpEL 表达式中使用Bean 的引用来获取Bean 的属性。
+
+```
+<property name="address" value="#{xidianSchool.location}"/>
+```
+
+假设一个Student的address（地址）属性跟School（学校）的location（地址）是一样的，都是"西安"的，那我们可以引用School的属性location为Student的属性address赋值。
+
+第一部分（在句号分割符之前的部分xidianSchool）通过其ID 指向xidianSchool Bean。第二部分指向xidianSchool Bean 的location 属性。通过这种方式装配address属性，其实等价于执行下面的示例代码：
+
+```
+Student student = new Student();
+student.setAddress(xidianSchool.getLocation());
+```
+
+#### 2.2 调用引用Bean的方法
+
+我们不只可以调用引用Bean的**属性**，还可以调用引用Bean的**方法**，假设xidianSchool Bean有个getLocation()方法：
+
+```
+<property name="address" value="#{xidianSchool.getLocation()}"/>
+```
+
+#### **2.3 null-safe 存取器避免空指针异常**
+
+假设有SpEL中有xidianSchool.getLocation().getCity()，并且 如果getLocation() 返回一个null 值， 那么SpEL 表达式求值时会抛出一个NullPointerException 异常。那么避免抛出空指针异常（NullPointerException）的方法是使用null-safe 存取器（？.）：
+
+```
+<property name="address" value="#{xidianSchool.getLocation()?.getCity()}"/> 
+```
+
+现在我们使用?. 运算符代替点（.）来访问getCity() 方法。在访问右边方法之前，该运算符会确保左边项的值不会为null。所以，如果getLocation()返回null 值，SpEL 不再尝试调用getCity() 方法。
+
+### **3. 操作类**
+
+在SpEL 中，使用T() 运算符会调用类作用域的方法和常量。例如，在SpEL 中使用Java 的Math 类，我们可以像下面的示例这样使用T() 运算符：
+
+```
+T(java.lang.Math) 
+```
+
+在上面示例中，T() 运算符的结果会返回一个java.lang.Math 的类对象。但是，T()运算符真正的价值在于，通过该运算符可以访问指定类的静态方法和常量。
+
+假设需要把PI 的值装配到Bean 的一个属性中。只需简单引用Math 类的PI 常量即可，如下所示：
+
+```
+<property name="pi" value="#{T(java.lang.Math).PI}"/> 
+```
+
+同样，使用T() 运算符也可以调用静态方法。
+
+```
+<property name="randomNumber" value="#{T(java.lang.Math).random()}"/> 
+```
+
+### **4. 在SpEL值上执行操作**
+
+SpEL 提供了几种运算符，这些运算符可以用在SpEL 表达式中的值上。
+
+| 运算符类型 | 运算符                          |
+| ----- | ---------------------------- |
+| 算术运算  | +， -， *， /， %， ^             |
+| 关系运算  | Li YanHong                   |
+| 逻辑运算  | < ，>，==，<=，>=，lt，gt，eq，le，ge |
+| 条件运算  | and，or，not，\|                |
+| 正则表达式 | ？：（ternary），？：（Elvis）        |
+| Nokia | matches                      |
+
+#### **4.1 算术运算**
+
+SpEL 提供了所有Java 支持的基础算术运算符，它还增加了（^）运算符来执行乘方运算。
+
+（1）加法，这里我们把counter Bean 的total 属性值与42 相加。
+
+```
+<property name="adjustedAmount" value="#{counter.total + 42}"/> 
+```
+
+（2）减法，这里我们把counter Bean 的total 属性值与20 相减。
+
+```
+<property name="adjustedAmount" value="#{counter.total - 20}"/> 
+```
+
+（3）乘法，这里我们计算一个圆的周长。
+
+```
+<property name="circumference" value="#{2 * T(java.lang.Math).PI * circle.radius}"/> 
+```
+
+（4）除法，这里我们把counter Bean 的total 属性值与 count 属性值相除。
+
+```
+<property name="average" value="#{counter.total / counter.count}"/> 
+```
+
+（5）求余
+
+```
+<property name="remainder" value="#{counter.total % counter.count}"/> 
+```
+
+（6）乘方，不同于Java ，SpEL提供了乘方运算，这里求圆的面积。
+
+```
+<property name="area" value="#{T(java.lang.Math).PI * circle.radius ^ 2}"/> 
+```
+
+（7）+不只提供加法运算，还提供了字符串连接的功能。
+
+```
+<property name="fullName" value="#{student.firstName + ' ' + student.lastName}"/>
+```
+
+#### **4.2 关系运算**
+
+判断两个值是否相等或者两者之间哪个更大，这种情况很常见。对于这种类型的比较，SpEL 同样提供了Java 所支持的比较运算符。
+
+（1）相等，这里equal属性为布尔类型。如果age等于24则将会true装配给equal属性。
+
+```
+<property name="equal" value="#{student.age == 24}"/> 
+```
+
+（2）类似地，小于（<）和大于（>）运算符用于比较不同的值。而且SpEL 还提供了大于等于（>=）和小于等于（<=）运算符。不过，在Spring 的XML 配置文件中使用小于等于和大于等于符号时，会报错，这是因为这两个符号在XML 中有特殊含义。当在XML 中使用SpEL时，最好对这些运算符使用SpEL 的文本替代方式。
+
+```
+<property name="hasCapacity" value="#{counter.total le 100000}"/> 
+```
+
+其实相当于（其实这样是不正确的，只是演示而用，明显看出代码高亮显示不对）：
+
+```
+<property name="hasCapacity" value="#{counter.total <= 100000}"/> 
+```
+
+文本型比较运算符如下表：
+
+| 运算符  | 符号   | 文本类型 |
+| ---- | ---- | ---- |
+| 等于   | ==   | eq   |
+| 小于   | <    | lt   |
+| 小于等于 | <=   | le   |
+| 大于   | >    | gt   |
+| 大于等于 | >=   | ge   |
+
+即使等于运算符（==）在XML 文件中不会产生问题，但是SpEL 还是提供了文本型的eq 运算符，从而与其他运算符保持一致性。这是因为某些开发者更倾向于使用文本型运算符，而不是符号型运算符。
+
+#### **4.3 逻辑运算**
+
+SpEL 提供了多种运算符，你可以使用它们来对表达式进行求值：
+
+| 运算符     | 操作                                  |
+| ------- | ----------------------------------- |
+| and     | 逻辑AND运算操作，只有运算符两边都是true，表达式才能是true。 |
+| or      | 逻辑OR运算操作，只有运算符任意一边是true，表达式就会是true。 |
+| not 或 ! | 逻辑NOT运算操作，对运算结果求反。                  |
+
+（1）在这个示例中， 如果xiaosiStudent Bean 的name 属性为xiaosi， 并且age属性的值大于24，则isHer属性将被设为true，否则为false。
+
+```
+<property name="isHer" value="#{xiaosiStudent.age gt 24 and xiaosiStudent.name == 'xiaosi'}"/>
+```
+
+（2）使用not运算符
+
+```
+<property name="otherStudent" value="#{not xiaosiStudent.sex}"/> 
+```
+
+#### **4.4 条件运算**
+
+如果我们希望在某个条件为true 时，SpEL 表达式的求值结果是某个值；如果该条件为false 时，它的求值结果是另一个值，那么这要如何实现呢？使用？：符号。
+
+（1）如果yoonaStudent Bean的sex属性为true，则把boy装配给sex属性，否则装配girl。
+
+```
+<property name="sex" value="#{yoonaStudent.sex == true ? 'boy' : 'girl'}"/>
+```
+
+（2）如果kenny.song 不为null，那么表达式的求值结果是kenny.song，否则就是“Greensleeves”。当我们以这种方式使用时，“?:”通常被称为elvis 运算符。
+
+```
+<property name="song" value="#{kenny.song ?: 'Greensleeves'}"/> 
+```
+
+#### **4.5 正则表达式**
+
+matches 运算符对String 类型的文本（作为左边参数）应用正则表达式（作为右边参数）。matches 的运算结果将返回一个布尔类型的值：如果与正则表达式相匹配，则返回true ；否则返回false。
+
+假设我们想判断一个字符串是否是有效的邮件地址。
+
+```
+<property name="validEmail" value= "#{admin.email matches '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com'}"/> 
+```
+
+### **5. 在SpEL 中筛选集合**
+
+我们可以引用集合中的某个成员，就像在Java 里操作一样，同样具有基于属性值来过滤集合成员的能力，还可以从集合的成员中提取某些属性放到一个新的集合中。
+
+**注意：**
+
+我们使用<util:list> 元素在Spring 里配置了一个包含School 对象的List 集合（学校集合）：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<util:list id = "schools">
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西安电子科技大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西安交通大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西北工业大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="山东大学"/>
+				<property name="location" value="山东"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="山东科技大学"/>
+				<property name="location" value="山东"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="北京大学"/>
+				<property name="location" value="北京"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="上海交通大学"/>
+				<property name="location" value="上海"></property>
+		</bean>
+	</util:list>
+	
+	<bean id = "yoonaStudent" class = "com.sjf.bean.Student">
+		<property name="name" value="yoona"/>
+		<property name="age" value="24"/>
+		<property name="school" value="#{schools[2]}"/>
+	</bean>
+</beans>
+```
+
+<util:list> 元素是由Spring 的util 命名空间所定义的。它创建了一个java.util.List 类型的Bean。在这种场景下，它是一个包含7 个School 学校 的List 集合。
+
+Student类：
+
+```
+package com.sjf.bean;
+ 
+import java.util.Collection;
+ 
+/**
+ * Student实体类
+ * @author sjf0115
+ *
+ */
+public class Student {
+	
+	public String name;
+	public int age;
+	public School school;
+	private Collection<School> likeSchools;
+	private Collection<String>visitedSchool;
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+ 
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public void setSchool(School school) {
+		this.school = school;
+	}
+	
+	public void setLikeSchool(Collection<School> likeSchools) {
+		this.likeSchools = likeSchools;
+	}
+	
+	
+	public void setVisitedSchool(Collection<String> visitedSchool) {
+		this.visitedSchool = visitedSchool;
+	}
+ 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("name：" + name + "   age：" + age + "   school：" + school.toString());
+		sb.append("   向往的学校：");
+		for(School school : likeSchools){
+			sb.append("   " + school.getName());
+		}//for
+		sb.append("   去过的学校：");
+		for(String schoolName : visitedSchool){
+			sb.append("   " + schoolName);
+		}//for
+		return sb.toString();
+	}
+}
+```
+
+School类：
+
+```
+package com.sjf.bean;
+ 
+ 
+public class School {
+	public String name;
+	public String location;
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public String getLocation() {
+		return location;
+	}
+	@Override
+	public String toString() {
+		return "name：" + name + "   location：" + location;
+	}
 }
 
 ```
 
-表达式`firstName + ' ' + lastName`就等价于`person.getFirstName() + " " + person.getLastName()`。如果属性本身是对象，还支持嵌套属性，如`person.address.city`，就等价于`person.getAddress().getCity()`
+#### 5.1 访问集合成员（[]）
 
-### 数组、列表和Map
-
-数组和列表都可以用过数字下标进行访问，比如`list[0]`。
-
-Map的访问就类似JavaScript的访问方式，使用key访问。例如java代码`map.put("name", "gangyou")`其中的map对象，可以通过`map['name']`获取到字符串**gangyou**。
-
-### 内联的数组和Map
-
-Spel允许在表达式内创建数组（列表）和Map，如`{1,2,3,4}`,`{'firstName': 'Gang', 'lastName': 'You'}`。
-
-### 方法调用
-
-SpEL使用java的相同语法进行方法调用，如`'Hello`.concat(', World!')`，输出**Hello, World!**。
-
-### 类型
-
-SpEL中可以使用特定的Java类型，经常用来访问Java类型中的静态属性或静态方法，需要用`T()`操作符进行声明。括号中需要包含类名的全限定名，也就是包名加上类名。唯一例外的是，SpEL内置了`java.lang`包下的类声明，也就是说`java.lang.String`可以通过`T(String)`访问，而不需要使用全限定名。
-
-两个例子： `T(Math).random()` 或 `T(java.lang.Math).random()`
-
-### 创建实例
-
-使用new可以直接在SpEL中创建实例，需要创建实例的类要通过全限定名进行访问，如：
-
-`new java.util.Date().now()`
-
-### 二元操作符
-
-SpEL中的二元操作符同Java中的二元操作符，包括了数学运算符、位运算符、关系运算符等等。
-
-### 三元操作符
-
-SpEL的三元操作符主要是 **if else then** 操作符 `condition ? true statement : false statement`与Java中的一致。
-
-另外一个就是借鉴自Groovy的 Elvis 操作符`?:`，Elvis就是猫王！
-
-![img](https://upload-images.jianshu.io/upload_images/1334699-4f1ee84cf12e7674.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/600)
-
-22571c16e399948037ed26756945c6fd.jpg
-
-这个操作符的样子就跟猫王的发型一样：）。
-
-举一个例子
+我们能做的最简单的事情就是从集合中提取一个成员，并将它装配到某个属性中：
 
 ```
-String expressionStr1 = " name != null ? name : 'Default Value'";
-String expressionStr2 = "name ?: 'Default Value'";
+<property name="school" value="#{schools[2]}"/>
 
 ```
 
-上面的两个表达式都是先判断 `getName()`的返回值是不是null，如果是就返回`Default Value`，通过下面的Elvis操作符可以让代码更加的清晰。
+我们从集合中挑选出第3 个学校（注意，集合的下标是从0 开始的），然后将它装配到school 属性中。中括号（[]）运算符会始终通过索引访问集合中的成员。
 
-### 安全访问符
+#### **5.2 查询集合成员（**.?[] ， .^[]  和 .$[]）
 
-同样借鉴自Groovy，在SpEL中引入了安全访问符**Safe Navigator Operator**——`.?`，解决了很大问题。相信每个Javaer都遇到过NullPointException的运行时异常，通常是对象还未实例化或者找不到对象，却访问对象属性造成的。通过安全访问符就可以避免这样的问题。
-
-```
-String expStr = "thisMayBeNull.?property"
-```
-
-这句表达式在求值的时候，不会因为`thisMayBeNull`是Null值而抛出NullPointException，而是会简单的返回null。个人认为此处结合Elvis操作符，是一个很完善的处理方式。
-
-### 集合选择
-
-同样借鉴自Groovy，SpEL提供了集合选择语法，如下面的例子：
+如果我们想从学校集合中查询位于西安的学校，一种实现方式是将所有的schools Bean 都装配到Bean 的属性中，然后在该Bean 中增加过滤不符合条件的学校的逻辑。但是在SpEL 中，只需使用一个查询运算符（**.?[]**）就可以简单做到，如下所示：
 
 ```
-List<Inventor> list = (List<Inventor>) parser.parseExpression(
-        "Members.?[Nationality == 'Serbian']").getValue(societyContext);
+<property name="likeSchool" value="#{schools.?[location == '西安']}"/>
+
 ```
 
-如果Members List不是Null，则在列表中选择`getNationality() == 'Serbian'`的对象集合返回。这个很类似于Java 8中的`stream and filter`方式，只是更加的简洁。
+注：likeSchool属性是Collection\<School>类型
 
-在`[]`中间可以利用任何的布尔表达式，创建筛选条件。例如`age > 18`，`name.startsWith('You')`等等。
+查询运算符会创建一个新的集合，新的集合中只存放符合中括号内的表达式的成员。在这种场景下，likeSchool 属性被注入了位于西安的学校集合（西安电子科技大学，西安交通大学，西北工业大学）。
 
-## 自定义函数
+SpEL 同样提供两种其他查询运算符：**.^[]  和 .$[] **，从集合中查询出**第一个匹配项和最后一个匹配项**。
+
+```
+<property name="school" value="#{schools.^[location == '山东']}"/>
+```
+
+在这种场景下，school 属性被注入了符合条件的第一个匹配项：山东大学
+
+```
+<property name="school" value="#{schools.$[location == '山东']}"/>
+
+```
+
+在这种场景下，school 属性被注入了符合条件的最后一个匹配项：山东科技大学
+
+#### 5.3 投影集合（.![]）
+
+集合投影是从集合的每一个成员中选择特定的属性放入一个新的集合中。SpEL的投影运算符（**.![]**）完全可以做到这点。
+
+例如，假设我们仅仅需要包含学校名称的一个String 类型的集合，而不是School 对象的集合：
+
+```
+<property name="visitedSchool" value="#{schools.![name]}"/>
+
+```
+
+这个表达式的结果是visitedSchool属性将被赋予一个String 类型的集合，包含西安电子科技大学，山东大学，北京大学诸如此类的值。在中括号内的name属性决定了结果集合中要包含什么样的成员。这里只选择schools集合中每一个成员的name属性，即学校名称。
+
+**实例：**
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<util:list id = "schools">
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西安电子科技大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西安交通大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="西北工业大学"/>
+				<property name="location" value="西安"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="山东大学"/>
+				<property name="location" value="山东"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="山东科技大学"/>
+				<property name="location" value="山东"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="北京大学"/>
+				<property name="location" value="北京"></property>
+		</bean>
+		<bean class="com.sjf.bean.School">
+				<property name="name" value="上海交通大学"/>
+				<property name="location" value="上海"></property>
+		</bean>
+	</util:list>
+	
+	<bean id = "yoonaStudent" class = "com.sjf.bean.Student">
+		<property name="name" value="yoona"/>
+		<property name="age" value="24"/>
+		<property name="school" value="#{schools.^[location == '西安']}"/>
+		<property name="likeSchool" value="#{schools.?[location == '北京']}"/>
+		<property name="visitedSchool" value="#{schools.![name]}"/>
+	</bean>
+</beans>
+
+```
+
+**运行结果：**
+
+```
+name：yoona   age：24   school：name：西安电子科技大学   location：西安   向往的学校：   北京大学   去过的学校：   西安电子科技大学   西安交通大学   西北工业大学   山东大学   山东科技大学   北京大学   上海交通大学
+
+```
+
+来源于：《Spring实战》
+
+### 自定义函数
 
 SpEL提供了Java的基础功能，也引入了3个借鉴自Groovy的特性语法提供更为简洁的表达能力。作为一款设计为框架的语言，更提供了自定义的扩展能力。
 
@@ -241,3 +621,5 @@ public abstract class StringUtils {
 
 
 https://www.jianshu.com/p/6a0a1fa453c8
+
+http://blog.csdn.net/sunnyyoona/article/details/50638957
