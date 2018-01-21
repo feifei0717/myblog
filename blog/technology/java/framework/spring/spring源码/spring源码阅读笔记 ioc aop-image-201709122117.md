@@ -170,7 +170,7 @@ AnnotationTransactionAttributeSource(注解事务匹配)
 
 #### tx:annotation-driven标签
 
-根据xml配置<tx:annotation-driven transaction-manager="txManager" />标签会创建InfrastructureAdvisorAutoProxyCreator、AnnotationTransactionAttributeSource、TransactionInterceptor、BeanFactoryTransactionAttributeSourceAdvisor等类的BeanDefinition 
+根据xml配置\<tx:annotation-driven transaction-manager="txManager" />标签会创建InfrastructureAdvisorAutoProxyCreator、AnnotationTransactionAttributeSource、TransactionInterceptor、BeanFactoryTransactionAttributeSourceAdvisor等类的BeanDefinition 
 
 
 
