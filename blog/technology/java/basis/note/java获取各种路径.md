@@ -1,6 +1,34 @@
 # java获取各种路径  路径不要有中文
 
+### 推荐 :使用spring工具获取各种路径
 
+```
+ FileInputStream input = new FileInputStream(org.springframework.util.ResourceUtils.getFile("classpath:config.yml"));
+```
+
+内置的resouce类型
+
+1. UrlResource
+
+2. ClassPathResource
+
+3. FileSystemResource
+
+4. ServletContextResource
+
+5. InputStreamResource
+
+6. ByteArrayResource
+
+7. EncodedResource 也就是Resource加上encoding, 可以认为是有编码的资源
+
+8. VfsResource(在jboss里经常用到, 相应还有 工具类 VfsUtils)
+
+9. org.springframework.util.xml.ResourceUtils 用于处理表达资源字符串前缀描述资源的工具. 如: &quot;classpath:&quot;.
+
+   有 getURL, getFile, isFileURL, isJarURL, extractJarFileURL
+
+   ​
 
 ### 获取web上传文件目录
 

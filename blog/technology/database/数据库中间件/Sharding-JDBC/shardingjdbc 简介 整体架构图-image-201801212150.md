@@ -1,6 +1,6 @@
 # shardingjdbc 简介 整体架构图
 
-## 简介 
+# 简介
 
 Sharding-JDBC直接封装JDBC API，可以理解为增强版的JDBC驱动，旧代码迁移成本几乎为零：
 
@@ -20,8 +20,15 @@ Sharding-JDBC功能灵活且全面：
 
 Sharding-JDBC配置多样：
 
-- 可支持YAML和Spring命名空间配置
-- 灵活多样的inline方式
+- 支持Java编码和YAML的配置方式
+- 支持自定义Spring命名空间与Spring boot starter
+- 灵活多样的inline表达式
+
+分布式治理能力突出： (2.0 only)
+
+- 配置集中化与动态化，可支持数据源、表与分片策略的动态切换 (2.0.0.M1)
+- 客户端的数据库治理，运行实例禁用启用 (2.0.0.M2)
+- 基于Open Tracing协议的APM信息输出，读写分离Slave数据源禁用启用及ConfigMap支持 (2.0.0.M3)
 
 ------
 
@@ -39,9 +46,8 @@ Sharding-JDBC配置多样：
 
 ------
 
-## 整体架构图
+# 整体架构图
 
-[![整体架构图](image-201801212150/architecture.png)](http://shardingjdbc.io/1.x/docs/img/architecture.png)
+[![整体架构图](image-201801212150/architecture_v2.png)](http://ovfotjrsi.bkt.clouddn.com/docs/img/architecture_v2.png)
 
-[![柔性事务-最大努力送达型](image-201801212150/architecture-soft-transaction-bed.png)](http://shardingjdbc.io/1.x/docs/img/architecture-soft-transaction-bed.png)
-
+[![柔性事务-最大努力送达型](image-201801212150/architecture-soft-transaction-bed.png)](http://ovfotjrsi.bkt.clouddn.com/docs/img/architecture-soft-transaction-bed.png)
