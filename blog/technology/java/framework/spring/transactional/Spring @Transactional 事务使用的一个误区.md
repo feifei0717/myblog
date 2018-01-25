@@ -1,3 +1,11 @@
+[TOC]
+
+
+
+# Spring @Transactional 事务使用的一个误区
+
+## 问题描述
+
 Spring bean 假设有如下类
 
 ```
@@ -36,7 +44,7 @@ ServiceFacade 调用service的methodA方法的时候，实际上执行的是serv
 
 
 
-解决的办法:    
+## 解决的办法    
 
 1，methodB放在另外的bean中被methodA调用或者facade调用service.methodA(),然后调用service.methodB    
 
@@ -44,7 +52,7 @@ ServiceFacade 调用service的methodA方法的时候，实际上执行的是serv
 
 
 
-
+## 总结
 
 
 总结：Spring的事务是基于AOP动态代理实现的。默认情况下，在同一个类中调用不同的方法，上面的事务声明是无效的。
