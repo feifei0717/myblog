@@ -118,4 +118,4 @@ commit**/**rollback
 
 8. commit；
 
-来源： <http://blog.chinaunix.net/uid-24219701-id-1746744.html>
+来源： <http://blog.chinaunix.net/uid-24219701-id-1746744.html>w
