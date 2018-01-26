@@ -1,3 +1,5 @@
+# oracle RETURNING 子句 返回
+
 RETURNING 自己通常结合DML 语句使用。（INSERT UPDATE DELETE）
 
 使用方法：
@@ -37,8 +39,6 @@ INSERT INTO SELECT、 和MERGE 语句 不支持 RETURNING
 
 再另外，RETURNING 可以与BULK COLLECT 结合（批量绑定， 另外一个是 FORALL）
 
-[![复制代码](oracle-RETURNING 子句_files/0.32860813941806555.png)]()
-
 ```
 DECLARE
 TYPE table_type IS TABLE OF column_name%TYPE;
@@ -55,8 +55,6 @@ COMMIT;
 END;
 /
 ```
-
-[![复制代码](oracle-RETURNING 子句_files/0.8407222838141024.png)]()
 
 嵌套表的使用方法可以看
 <http://www.cnblogs.com/Azhu/archive/2012/04/16/2452781.html>
