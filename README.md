@@ -1,6 +1,6 @@
 # myblog
 
-博客,记录学习技术和平时遇到的问题。
+博客,记录学习技术和平时遇到的问题.
 
 
 github地址：https://github.com/nowisjerry/myblog
