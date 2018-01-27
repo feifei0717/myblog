@@ -1,5 +1,10 @@
-[Java集合概述](http://java-performance.info/java-collections-overview/)
+[TOC]
+
+
+
+Java集合概述
 ==================
+
 本文将为你简要介绍Java所有的标准集合。我们会对集合的不同属性和主要使用场景进行分类。除此之外，我们会列出所有在不同的集合类型间转换数据的正确方式。
 
 ##数组(Arrays)
@@ -146,3 +151,7 @@
 * [原生类型集合：Trove library](http://java-performance.info/primitive-types-collections-trove-library/)－Trove库概览－一个可以包含Java原生类型的集合（跟多数JDK集合中的Objects不同）。
 * [流行Java数据类型的内存消耗１](http://java-performance.info/memory-consumption-of-java-data-types-1/)－enums，EnumMap/EnumSet/BitSet/ArrayList/LinkedList/ArrayDeque类的内存消耗。
 * [流行Java数据类型的内存消耗２](http://java-performance.info/memory-consumption-of-java-data-types-2/)－HashMap/HashSet，LinkedHashMap/LinkedHashSet，TreeMap/TreeSet和PriorityQueue等Java7中的JDK类和[Trove](http://java-performance.info/primitive-types-collections-trove-library/)中对应的替代品之间的内存消耗。
+
+
+
+http://java-performance.info/java-collections-overview/

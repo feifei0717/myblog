@@ -1,10 +1,14 @@
+[TOC]
+
+
+
 ## Spring的作用域RequestContextListener–org.springframework.web.context.request.RequestContextListener 的作用
 
-2013年04月02日 ⁄ 綜合 ⁄ 共 2537字	⁄ 字型大小 [小](javascript:doZoom(12)) [中](javascript:doZoom(13)) [大](javascript:doZoom(18)) ⁄ 評論關閉
-
-## 一、配置方式 
+## 说明
 
 在Spring2.0中除了以前的Singleton和Prototype外又加入了三个新的web作用域，分别为request、session和global session，如果你想让你的容器里的某个bean拥有其中某种新的web作用域，除了在bean级上配置相应的scope属性，还必须在容器级做一个额外的初始化配置。 
+
+## 一、配置方式 
 
 Java代碼  
 
@@ -40,20 +44,29 @@ Java代碼
 两种方式完成完全一样的功能：基于LocalThread将HTTP request对象绑定到为该请求提供服务的线程上。这使得具有request和session作用域的bean能够在后面的调用链中被访问到。 
 
 Request作用域 
+
+```
 <bean id="loginAction" class="com.foo.LoginAction" scope="request"/> 
+```
 
 针对每次HTTP请求，Spring容器会根据loginAction bean定义创建一个全新的LoginAction bean实例，且该loginAction bean实例仅在当前HTTP request内有效，因此可以根据需要放心的更改所建实例的内部状态，而其他请求中根据loginAction
 
 bean定义创建的实例，将不会看到这些特定于某个请求的状态变化。当处理请求结束，request作用域的bean实例将被销毁。
 
 Session作用域 
+
+```
 <bean id="userPreferences" class="com.foo.UserPreferences" scope="session"/> 
+```
 
 针对某个HTTP Session，Spring容器会根据userPreferences bean定义创建一个全新的userPreferences bean实例，且该userPreferences bean仅在当前HTTP Session内有效。与request作用域一样，你可以根据需要放心的更改所创建实例的内部状态，而别的HTTP
 
 Session中根据userPreferences创建的实例，将不会看到这些特定于某个HTTP Session的状态变化。当HTTP Session最终被废弃的时候，在该HTTP Session作用域内的bean也会被废弃掉。 
 global session作用域 
+
+```
 <bean id="userPreferences" class="com.foo.UserPreferences" scope="globalSession"/> 
+```
 
 global session作用域类似于标准的HTTP Session作用域，不过它仅仅在基于portlet的web应用中才有意义。Portlet规范定义了全局Session的概念，它被所有构成某个portlet web应用的各种不同的portlet所共享。在global
 
