@@ -1,4 +1,12 @@
-# 问题：[LogBack default charset for LayoutWrappingEncoder?](http://stackoverflow.com/questions/32207432/logback-default-charset-for-layoutwrappingencoder)
+[TOC]
+
+
+
+# LogBack default charset for LayoutWrappingEncoder
+
+
+
+## 问题：[LogBack default charset for LayoutWrappingEncoder?](http://stackoverflow.com/questions/32207432/logback-default-charset-for-layoutwrappingencoder)
 
 The Logback 1.1.3 [`LayoutWrappingEncoder` documentation](http://logback.qos.ch/manual/encoders.html) doesn't indicate what the default charset will be if the user doesn't set it, but the source code says:
 
@@ -8,9 +16,11 @@ However I'm using a `PatternLayoutEncoder` (with a `RollingFileAppender`), and i
 
 UTF-8 output is actually what I want, but I want to make sure I'm not getting this by chance, since the documentation seems to indicate something else. So why is Logback giving me UTF-8 output when I haven't explicitly specified a charset?
 
-回答：
 
-## Answers
+
+
+
+## 回答：
 
 **Logback Character Encoding**
 
