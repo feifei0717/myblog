@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # ExecutorService中submit和execute的区别
 
 在Java5之后，并发线程这块发生了根本的变化，最重要的莫过于新的启动、调度、管理线程的一大堆API了。在Java5以后，通过Executor来启动线程比用Thread的start()更好。在新特征中，可以很容易控制线程的启动、执行和关闭过程，还可以很容易使用线程池的特性。
@@ -68,7 +72,7 @@ Executors此包中所定义的 Executor、ExecutorService、ScheduledExecutorSer
 
  
 
-```
+```Java
 package com.practice.executorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.ExecutorService;
