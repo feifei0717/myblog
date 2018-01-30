@@ -1,4 +1,6 @@
-# [JAVA中循环删除list中元素的方法总结](http://www.cnblogs.com/pcheng/p/5336903.html)
+[TOC]
+
+# JAVA中循环删除list中元素的方法总结
 
 　　印象中循环删除list中的元素使用for循环的方式是有问题的，但是可以使用增强的for循环，然后今天在使用时发现报错了，然后去科普了一下，再然后发现这是一个误区。下面就来讲一讲。。伸手党可直接跳至文末。看总结。。
 
@@ -6,7 +8,7 @@
 
  
 
-1、for循环遍历list
+## 1、for循环遍历list
 
 ```
 for(int i=0;i<list.size();i++){
@@ -19,7 +21,7 @@ for(int i=0;i<list.size();i++){
 
  
 
-2、增强for循环
+## 2、增强for循环
 
 ```
 for(String x:list){
@@ -32,7 +34,7 @@ for(String x:list){
 
  
 
-3、iterator遍历
+## 3、iterator遍历
 
 
 
@@ -52,7 +54,7 @@ while(it.hasNext()){
 
  
 
-　　总结：
+## 总结：
 
 　　（1）循环删除list中特定一个元素的，可以使用三种方式中的任意一种，但在使用中要注意上面分析的各个问题。
 

@@ -1,6 +1,8 @@
-# [awk实例：简单入门](http://suo.iteye.com/blog/1319525)
+[TOC]
 
- 
+
+
+# linux awk实例：简单入门 
 
 Awk是一种处理结构数据并输出格式化结果的编程语言， Awk 是其作者 "Aho,Weinberger,Kernighan" 的简称。
 
@@ -39,7 +41,7 @@ awk '/search pattern1/ {Actions}
 
 5. 单引号的作用是包裹起来防止shell 截断
 
- 
+
 
 ## 2.  Awk的工作方式：
 
@@ -95,8 +97,6 @@ $ awk '{print;}' employee.txt
 
 ## 4.  Awk打印匹配的行
 
- 
-
 ```
 $ awk '/Thomas/    
 > /Nisha/' employee.txt    
@@ -128,7 +128,7 @@ Randy $6,000
 ```
 
 
- 
+
 
 在上诉例子中$2 和 $5 分别代表名字和薪水，也可以使用 $NF 获得薪水，其中 $NF 代表最后一个字段，在打印语句中逗号是一个连接符号。
 
@@ -177,8 +177,6 @@ Report Generated
 
 ## 7.  Awk找出员工 ID 大于 200 的员工
 
- 
-
 ```
 $ awk '$1 >200' employee.txt    
 300  Sanjay  Sysadmin   Technology  $7,000    
@@ -194,8 +192,6 @@ $ awk '$1 >200' employee.txt
 
 $4代表员工所在的部门，如果等于 Technology 则打印出整行
 
- 
-
 ```
 $ awk '$4 ~/Technology/' employee.txt    
 200  Jason   Developer  Technology  $5,500    
@@ -210,8 +206,6 @@ $ awk '$4 ~/Technology/' employee.txt
 ## 9.  Awk打印技术部门的员工数
 
 在下面的例子中，检查员工的部门是否是Technology ，如果是则递增 count 变量的值。 Count 变量的值在BEGIN 的 Actions 中被初始化为 0 。
-
- 
 
 ```
 $ awk 'BEGIN { count=0;}    
