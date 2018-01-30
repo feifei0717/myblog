@@ -1,4 +1,8 @@
-# [Java并发编程：Callable、Future和FutureTask](http://www.cnblogs.com/dolphin0520/p/3949310.html)
+[TOC]
+
+
+
+# Java并发编程：Callable、Future和FutureTask
 
 Java并发编程：Callable、Future和FutureTask
 
@@ -238,3 +242,5 @@ class Task implements Callable<Integer>{
 本博客中未标明转载的文章归作者[海子](http://www.cnblogs.com/dolphin0520/)和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。
 
 分类: [Java并发编程](http://www.cnblogs.com/dolphin0520/category/602384.html)
+
+ 
