@@ -2,7 +2,7 @@
 
 
 
-# mybatis TypeHandler简介及配置（mybatis源码篇）
+# mybatis TypeHandler 简介及配置 源码
 
 上篇文章《[深入浅出Mybatis系列（四）---配置详解之typeAliases别名（mybatis源码篇）](http://www.cnblogs.com/dongying/p/4037678.html)》为大家介绍了mybatis中别名的使用，以及其源码。本篇将为大家介绍TypeHandler， 并简单分析其源码。
 
@@ -13,6 +13,18 @@
 那么，Mybatis为我们实现了哪些TypeHandler呢?  我们怎么自定义实现一个TypeHandler ?  这些都会在接下来的mybatis的源码中看到。
 
 在看源码之前，还是像之前一样，先看看怎么配置吧？
+
+
+
+## 获取 TypeHandler 方法源码位置
+
+TypeHandlerRegistry 类. 下面方法
+
+```
+private <T> TypeHandler<T> getTypeHandler(Type type, JdbcType jdbcType) {
+```
+
+
 
 ## 配置TypeHandler
 
