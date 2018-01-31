@@ -1,6 +1,6 @@
 [TOC]
 
-# Spring中的事件机制
+# Spring中的事件机制 spring初始化完成做逻辑
 
 Spring中的事件机制是一个观察者模式的实现.观察者模式就是一个目标对象管理所有相依于它的观察者对象,并且在它本身的状态改变时主动发出通知.Spring的事件由ApplicationContext发布
 
@@ -16,7 +16,7 @@ Spring中默认存在的事件有
 
 > - ContextStartedEvent：ApplicationContext启动后触发的事件
 > - ContextStoppedEvent：ApplicationContext停止后触发的事件
-> - ContextRefreshedEvent：ApplicationContext初始化或刷新完成后触发的事件
+> - ContextRefreshedEvent：ApplicationContext初始化或刷新完成后触发的事件(如果想初始化后做逻辑只执行一次需要做只执行一次校验处理)
 > - ContextClosedEvent：ApplicationContext关闭后触发的事件
 
 WEB项目里会存在两个容器，一个是rootApplicationContext ,另一个就是projectName-servlet context,这个时候会触发两次ContextRefreshedEvent,注意rootApplicationContext没有parent,可以以此来区分
