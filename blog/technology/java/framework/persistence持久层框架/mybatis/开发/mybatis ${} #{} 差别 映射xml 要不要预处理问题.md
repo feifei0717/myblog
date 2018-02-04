@@ -1,10 +1,12 @@
+# mybatis ${} #{} 差别 映射xml 要不要预处理问题
+
 ${}:不要预处理形式，直接拼接，不会加引号 (应用于传入表名)
 
 \#{}：要预处理，先用占位符？，后面赋值， 会帮你加引号
 
 例子1 表名：
 
-```
+```Xml
 	<select id="getPrivilegeByCondition" resultType="Privilege"  >
 		SELECT 
 			<include refid="privilegeColumns"/>
@@ -24,7 +26,7 @@ ${}:不要预处理形式，直接拼接，不会加引号 (应用于传入表�
 
 例子2 测试字段直接显示：
 
-```
+```Xml
 <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
   select 
   <include refid="Base_Column_List" />
