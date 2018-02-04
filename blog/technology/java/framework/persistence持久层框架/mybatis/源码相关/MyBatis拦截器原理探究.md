@@ -32,7 +32,7 @@ MyBatis 允许你在已映射语句执行过程中的某一点进行拦截调用
 
 首先我们看下MyBatis拦截器的接口定义：
 
-```
+```java
 public interface Interceptor {
  
   Object intercept(Invocation invocation) throws Throwable;
@@ -48,7 +48,7 @@ public interface Interceptor {
 
 下面的MyBatis官网的一个拦截器实例：
 
-```
+```java
 @Intercepts({@Signature(
   type= Executor.class,
   method = "update",
@@ -67,7 +67,7 @@ public class ExamplePlugin implements Interceptor {
 
 全局xml配置：
 
-```
+```Xml
 <plugins>
     <plugin interceptor="org.format.mybatis.cache.interceptor.ExamplePlugin"></plugin>
 </plugins>
@@ -83,7 +83,7 @@ public class ExamplePlugin implements Interceptor {
 
 XMLConfigBuilder解析MyBatis全局配置文件的pluginElement私有方法：
 
-```
+```java
 private void pluginElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
@@ -99,7 +99,7 @@ private void pluginElement(XNode parent) throws Exception {
 
 具体的解析代码其实比较简单，就不贴了，主要就是通过反射实例化plugin节点中的interceptor属性表示的类。然后调用全局配置类Configuration的addInterceptor方法。
 
-```
+```java
 public void addInterceptor(Interceptor interceptor) {
     interceptorChain.addInterceptor(interceptor);
   }
@@ -107,7 +107,7 @@ public void addInterceptor(Interceptor interceptor) {
 
 这个interceptorChain是Configuration的内部属性，类型为InterceptorChain，也就是一个拦截器链，我们来看下它的定义：
 
-```
+```java
 public class InterceptorChain {
  
   private final List<Interceptor> interceptors = new ArrayList<Interceptor>();
@@ -132,7 +132,7 @@ public class InterceptorChain {
 
 现在我们理解了拦截器配置的解析以及拦截器的归属，现在我们回过头看下为何拦截器会拦截这些方法（Executor，ParameterHandler，ResultSetHandler，StatementHandler的部分方法）：
 
-```
+```java
 public ParameterHandler newParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     ParameterHandler parameterHandler = mappedStatement.getLang().createParameterHandler(mappedStatement, parameterObject, boundSql);
     parameterHandler = (ParameterHandler) interceptorChain.pluginAll(parameterHandler);
@@ -188,7 +188,7 @@ public Object plugin(Object target) {
 
 下面我们就分析这3个 “新组合” 的源码，首先先看Plugin类的wrap方法：
 
-```
+```java
 public static Object wrap(Object target, Interceptor interceptor) {
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();
@@ -207,7 +207,7 @@ Plugin类实现了InvocationHandler接口，很明显，我们看到这里返回
 
 getSignatureMap方法：
 
-```
+```java
 private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     if (interceptsAnnotation == null) { // issue #251
@@ -245,7 +245,7 @@ getSignatureMap方法解释：首先会拿到拦截器这个类的@Interceptors�
 
 getAllInterfaces方法：
 
-```
+```java
 private static Class<?>[] getAllInterfaces(Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
     Set<Class<?>> interfaces = new HashSet<Class<?>>();
     while (type != null) {
@@ -266,7 +266,7 @@ getAllInterfaces方法解释：根据目标实例target(这个target就是之前
 
 比如MyBatis官网的例子，当Configuration调用newExecutor方法的时候，由于Executor接口的update(MappedStatement ms, Object parameter)方法被拦截器被截获。因此最终返回的是一个代理类Plugin，而不是Executor。这样调用方法的时候，如果是个代理类，那么会执行：
 
-```
+```java
 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
@@ -284,7 +284,7 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 
 这个Invocation类如下：
 
-```
+```java
 public class Invocation {
  
   private Object target;
