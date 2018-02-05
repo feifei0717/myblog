@@ -1,6 +1,8 @@
-# HashMap jdk8和jdk7中的实现详解和总结
+[TOC]
 
- 
+
+
+# HashMap jdk8和jdk7中的实现详解和总结
 
 *摘要：* 大热的《阿里巴巴Java开发规约》中有提到： 【推荐】集合初始化时，指定集合初始值大小。说明：HashMap使用如下构造方法进行初始化，如果暂时无法确定集合大小，那么指定默认值（16）即可： public HashMap (int initialCapacity) { this(initialCapacity, DEFAULT_LOAD_FACTOR); } 看到代码规约这一条的时候，我觉得是不是有点太 low 了，身为开发，大家都知道 HashMap 的原理。
 
