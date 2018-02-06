@@ -48,7 +48,7 @@ public class  A{
 
 set和get方法省略。。。。。
 
-​         public**static** class B{
+​         public **static** class B{
 
 ​          private String name;
 
