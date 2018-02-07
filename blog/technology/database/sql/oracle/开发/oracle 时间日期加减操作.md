@@ -36,7 +36,7 @@ SYSDATE             SYSDATE+NUMTODSINTE
 对当前日期增加45秒
 
 ```
-SQL> select sysdate, sysdate+numtodsinterval(45,’second’) from dual ;
+SQL> select sysdate, sysdate+numtodsinterval(45,'second') from dual ;
 
 SYSDATE             SYSDATE+NUMTODSINTE
 ——————- ——————-
@@ -76,14 +76,13 @@ SYSDATE             ADD_MONTHS(SYSDATE,
 2010-10-14 21:42:17 2012-10-14 21:42:17
 ```
 
-### timestamp的加减
 
 timestamp的操作方法与上面类似；
 求两个日期之差：
 例：求2007-5-23 21：23：34与当前时间之间的差值。
 
 ```
-SQL> select sysdate-to_date(’20070523 21:23:34′,’yyyy-mm-dd hh24:mi:ss’) dt from
+SQL> select sysdate-to_date('20070523 21:23:34′,'yyyy-mm-dd hh24:mi:ss') dt from
 dual ;
 
 DT
@@ -95,11 +94,11 @@ DT
 
 ```
 **年**月**日 **:**:**
-SQL> SELECT NUMTOYMINTERVAL(MONTHS_BETWEEN(DT1, DT2), ‘month’) mon,
+SQL> SELECT NUMTOYMINTERVAL(MONTHS_BETWEEN(DT1, DT2), ‘month') mon,
 2         numtodsinterval(dt1-(add_months(dt2,trunc(MONTHS_BETWEEN(DT1, DT2)))
-),’day’) DAY
+),'day') DAY
 3    FROM (SELECT SYSDATE DT1,
-4                 TO_DATE(’20070523 21:23:34′, ‘yyyy-mm-dd hh24:mi:ss’) DT2
+4                 TO_DATE('20070523 21:23:34′, ‘yyyy-mm-dd hh24:mi:ss') DT2
 5          FROM DUAL)
 6 ;
 
