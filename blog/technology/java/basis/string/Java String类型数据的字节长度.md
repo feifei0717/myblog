@@ -1,10 +1,16 @@
-问题描述：
+[TOC]
+
+
+
+# Java String类型数据的字节长度
+
+## 问题描述：
 
 ​        向Oracle[数据库](http://lib.csdn.net/base/14)中一varchar2(64)类型字段中插入一条String类型数据，程序使用String.length()来进行数据的长度校验，如果数据是纯英文，没有问题，但是如果数据中包含中文，校验可以通过，但是在数据入库时经常会报数据超长。
 
  
 
-问题分析：
+## 问题分析：
 
 ​        既然问题是数据超长，那么问题应该就是出在数据长度校验上，也就是出在String.length()这个方法上，来看看JDK是如何描述这个方法的：
 
@@ -35,7 +41,7 @@ public static void main(String[] args) throws UnsupportedEncodingException {
 
  
 
-解决方式：
+## 解决方式：
 
 ​        既然是判断数据长度时以字符为标准导致出错，那么思路就很明确了，在进行数据长度校验时，取数据的字节长度：
 
