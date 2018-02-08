@@ -1,4 +1,4 @@
-# [Mac键盘图标与对应快捷按键标志汇总](http://blog.csdn.net/u011694533/article/details/46595057)
+# Mac键盘图标与对应快捷按键标志汇总
 
 
 
@@ -56,3 +56,9 @@ fn——功能键就是fn
 - Command ~ 在同一程序的不同窗口下切换，safari上网经常用 
 - Command M 最小化当前窗口 
 - Command Option F 有搜索栏的程序跳到搜索栏，如Preview(预览)的搜索栏，Safari的Google栏
+
+
+
+
+
+http://blog.csdn.net/u011694533/article/details/46595057
