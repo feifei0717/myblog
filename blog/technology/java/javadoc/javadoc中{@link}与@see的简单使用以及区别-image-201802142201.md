@@ -13,8 +13,8 @@
 具体使用方法和上面那个@see是一样的。
 实际效果，看下面的图吧。
 
-![img](javadoc中{@link}与@see的简单使用以及区别_files/0.17521082134726762.png)
+![img](image-201802142201/0.17521082134726762.png)
 
-![img](javadoc中{@link}与@see的简单使用以及区别_files/0.9865480295485978.png)
+![img](image-201802142201/0.9865480295485978.png)
 
 来源： [http://blog.csdn.net/qq_27093465/article/details/59121608](http://blog.csdn.net/qq_27093465/article/details/59121608)
