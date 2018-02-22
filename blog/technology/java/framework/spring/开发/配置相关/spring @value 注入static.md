@@ -12,13 +12,11 @@ Spring中如何注入静态变量
 
 如下代码：
 
-```
+```Java
 @Component
 public class Sample {
-
     @Value("${my.name}")
     public static String name;
-
 }
 
 ```
@@ -33,7 +31,7 @@ public class Sample {
 
 当然，在某些情况下我们依然需要自己去实例化一些类并自己维护其生命周期，这时候我们确实又有需求使用到Spring context中的bean，这种情况下我们可以通过下面的方法将bean注入进来：
 
-```
+```java
 @Component
 public class Sample {
 
