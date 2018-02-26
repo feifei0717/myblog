@@ -1,42 +1,38 @@
-## 问题导读
+[TOC]
 
-1、使用ZooKeeper时，一般会有哪些棘手的问题？
+# ZkClient Zookeeper的替代品?
 
-2、ZKClient能解决ZooKeeper的哪些弊端？
-
-3、ZKClient有什么好处呢?
-
-
-
-
-
-## 序言
+## 前言
 
 直接使用zookeeper的api实现业务功能比较繁琐。因为要处理session loss，session expire等异常，在发生这些异常后进行重连。又因为ZK的watcher是一次性的，如果要基于wather实现发布/订阅模式，还要自己包装一下，将一次性订阅包装成持久订阅。另外如果要使用抽象级别更高的功能，比如分布式锁，leader选举等，还要自己额外做很多事情。这里介绍下ZK的第三方客户端包装小工具，可以分别解决上述小问题。
 
 
 
-## 在使用ZooKeeper过程中发现，用原生方法实现某些业务功能很麻烦
+## 问题
+
+在使用ZooKeeper过程中发现,用原生方法实现某些业务功能很麻烦
 
 例如：
 
 1)如何实现持久的Watcher注册
 
-ZooKeeper的Watcher是一次性的，用过了需要再注册；
+​	ZooKeeper的Watcher是一次性的，用过了需要再注册；
 
 2)如何解决session的超时问题
 
-生产环境中如果网络出现不稳定情况，那么这种情况出现的更加明显；
+​	生产环境中如果网络出现不稳定情况，那么这种情况出现的更加明显；
 
 3)如何实现领导选举
 
-集群情况下可能需要实现stand by，一个服务挂了，另一个需要接替的效果；
+​	集群情况下可能需要实现stand by，一个服务挂了，另一个需要接替的效果；
 
 4)如何实现节点数据的封装
 
-项目中一般都会使用对象，而ZooKeeper只能存放文本类的数据。
+​	项目中一般都会使用对象，而ZooKeeper只能存放文本类的数据。
 
-## ZKClient却能把这些问题解决了:
+## 解决问题
+
+ZKClient却能把这些问题解决了:
 
 ### 1)持久的Watcher注册问题：
 
@@ -130,5 +126,7 @@ ZKClient框架提供了ZkSerializer来进行序列化和反序列化，貌似挺
 附录
 
 [ZooKeeper管理员指南](http://rdc.taobao.com/team/jm/archives/2318)
+
+
 
 来源： <http://www.aboutyun.com/thread-9667-1-1.html>
