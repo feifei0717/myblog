@@ -44,7 +44,7 @@ zkClient将一次性watcher包装为持久watcher。后者的具体做法是简�
 
 zkClient简单的使用样例如下：
 
-```
+```java
 public static void testzkClient(final String serverList) {
         ZkClient zkClient4subChild = new ZkClient(serverList);
         zkClient4subChild.subscribeChildChanges(PATH, new IZkChildListener() {
@@ -55,11 +55,9 @@ public static void testzkClient(final String serverList) {
         });
 ```
 
-
-
 上面是订阅children变化，下面是订阅数据变化
 
-```
+```java
 ZkClient zkClient4subData = new ZkClient(serverList);
         zkClient4subData.subscribeDataChanges(PATH, new IZkDataListener() {
             @Override
@@ -74,11 +72,9 @@ ZkClient zkClient4subData = new ZkClient(serverList);
         });
 ```
 
-
-
 订阅连接状态的变化：
 
-```
+```java
 ZkClient zkClient4subStat = new ZkClient(serverList);
         zkClient4subStat.subscribeStateChanges(new IZkStateListener() {
             @Override
@@ -101,13 +97,13 @@ zkClient除了做了一些便捷包装之外，对watcher使用做了一点增�
 
 ZKClient框架里会经常看见一些while语句，是由这些while语句完成的，比如ZkClient.retryUntilConnected方法
 
-(感谢紫川的反馈，此条可能存在描述性问题。经校对：ZkClient貌似还是有对Session Expired 处理的，在ZkClient.processStateChanged方法中。虽然能重新连接，但是连接上是一个新的 session，原有创建的ephemeral znode和watch会被删除，程序上你可能需要处理这个问题。欢迎大家提出意见，万分感谢)
+(感谢紫川的反馈，此条可能存在描述性问题。经校对：ZkClient貌似还是有对Session Expired 处理的，在ZkClient.processStateChanged方法中。虽然能重新连接，但是连接上是一个新的 session，原有创建的ephemeral znode(先判断不存在则创建获取的方式)和watch(直接使用zk的订阅就不会有问题)会被删除，程序上你可能需要处理这个问题。欢迎大家提出意见，万分感谢)
 
 ### 3)领导选举实现:
 
 选举实现逻辑这里讲的很清楚
 
-ZKClient框架提供了DistributedQueue可以对offer方法做适当修改来实现则个功能
+ZKClient框架提供了DistributedQueue可以对offer方法做适当修改来实现这个功能
 
 ### 4)节点数据的封装:
 
