@@ -4,7 +4,7 @@
 
 MappedStatement类在Mybatis框架中用于表示XML文件中一个sql语句节点，即一个<select />、<update />或者<insert />标签。Mybatis框架在初始化阶段会对XML配置文件进行读取，将其中的sql语句节点对象化为一个个MappedStatement对象。比如下面这个非常简单的XML mapper文件：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -58,7 +58,7 @@ Mybatis对这个文件的配置读取和解析后，会注册两个MappedStateme
 
 打开MappedStatement对象的源码，看一下其中的私有属性。
 
-```
+```java
 public final class MappedStatement {
  
   private String resource;
@@ -97,7 +97,7 @@ public final class MappedStatement {
 
 SqlSource是一个接口类，在MappedStatement对象中是作为一个属性出现的，它的代码如下：
 
-```
+```java
 package org.apache.ibatis.mapping;
  
 /**
@@ -116,7 +116,7 @@ public interface SqlSource {
 
 SqlSource接口只有一个getBoundSql(Object parameterObject)方法，返回一个BoundSql对象。一个BoundSql对象，代表了一次sql语句的实际执行，而SqlSource对象的责任，就是根据传入的参数对象，动态计算出这个BoundSql，也就是说Mapper文件中的<if />节点的计算，是由SqlSource对象完成的。SqlSource最常用的实现类是DynamicSqlSource，来看一看它的代码：
 
-```
+```java
 package org.apache.ibatis.scripting.xmltags;
  
 import java.util.Map;
@@ -154,7 +154,7 @@ public class DynamicSqlSource implements SqlSource {
 
 其中的
 
-```
+```java
 rootSqlNode.apply(context);
 ```
 
@@ -164,7 +164,7 @@ rootSqlNode.apply(context);
 
 DynamicContext类中，有对传入的parameterObject对象进行“map”化处理的部分，也就是说，你传入的pojo对象，会被当作一个键值对数据来源来进行处理，读取这个pojo对象的接口，还是Map对象。从DynamicContext的源码中，能看到很明显的线索。
 
-```
+```java
 import java.util.HashMap;
 import java.util.Map;
  
@@ -282,7 +282,7 @@ MetaObject对象的取值过程。
 
 我们都知道，Mybatis中采用了Ognl来计算动态sql语句，DynamicContext类中的这个静态初始块，很好的说明了这一点
 
-```
+```java
 static {
   OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
 }
@@ -294,7 +294,7 @@ ContextAccessor也是DynamicContext的内部类，实现了Ognl中的PropertyAcc
 
 结合一个例子来理解一下：
 
-```
+```java
 @Test
     public void testSqlSource() throws Exception {
         String resource = "mybatis/mybatis-config.xml";
