@@ -1,6 +1,6 @@
 # shardingjdbc 简介 整体架构图
 
-# 简介
+## 简介
 
 Sharding-JDBC直接封装JDBC API，可以理解为增强版的JDBC驱动，旧代码迁移成本几乎为零：
 
@@ -46,7 +46,7 @@ Sharding-JDBC配置多样：
 
 ------
 
-# 整体架构图
+## 整体架构图
 
 [![整体架构图](image-201801212150/architecture_v2.png)](http://ovfotjrsi.bkt.clouddn.com/docs/img/architecture_v2.png)
 

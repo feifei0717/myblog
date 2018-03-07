@@ -11,7 +11,7 @@
 > 【推荐】集合初始化时，指定集合初始值大小。
 > 说明：HashMap使用如下构造方法进行初始化，如果暂时无法确定集合大小，那么指定默认值（16）即可：
 
-```
+```java
 public HashMap (int initialCapacity) {
     this(initialCapacity, DEFAULT_LOAD_FACTOR);
 }
@@ -74,7 +74,7 @@ HashMap 的bucket数组并不会在new 的时候分配，而是在第一次 put 
 
 JDK8中 HashMap 的bucket数组大小肯定是2的幂，对于2的幂大小的 bucket，计算下标只需要 hash 后按位与 n-1，比%模运算取余要快。如果你通过 HashMap(int initialCapacity) 构造器传入initialCapacity，会先计算出比initialCapacity大的 2的幂存入 threshold，在第一次 put 的 resize() 初始化中会按照这个2的幂初始化数组大小，此后 resize 扩容也都是每次乘2，这么设计的原因后面会详细讲。
 
-```
+```java
 public HashMap(int initialCapacity, float loadFactor) {
     if (initialCapacity < 0)
         throw new IllegalArgumentException("Illegal initial capacity: " +
@@ -111,7 +111,7 @@ JKD8 中put 和 get 时，对 key 的 hashCode 先用 hash 函数散列下，再
 
 具体 hash 代码如下：
 
-```
+```java
 static final int hash(Object key) {
     int h;
     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
@@ -136,7 +136,7 @@ put函数的思路大致分以下几步：
 
 具体代码如下：
 
-```
+```java
 public V put(K key, V value) {
     // 对key的hashCode()做hash
     return putVal(hash(key), key, value, false, true);
@@ -323,7 +323,7 @@ JDK7 里 HashMap的bucket数组也不会在new 的时候分配，也是在第一
 
 JDK7中 HashMap 的bucket数组大小也一定是2的幂，同样有计算下标简便的优点。如果你通过 HashMap(int initialCapacity) 构造器传入initialCapacity，会先存入 threshold，在第一次 put 时调用 inflateTable() 初始化，会计算出比initialCapacity大的2的幂作为初始化数组的大小，此后 resize 扩容也都是每次乘2。
 
-```
+```Java
 public HashMap(int initialCapacity, float loadFactor) {
     if (initialCapacity < 0)
         throw new IllegalArgumentException("Illegal initial capacity: " +
@@ -372,7 +372,7 @@ JKD7 中，bucket数组下标也是按位与计算，但是 hash 函数与 JDK8�
 
 具体hash 代码如下所示：
 
-```
+```java
 final int hash(Object k) {
     int h = hashSeed;
     if (0 != h && k instanceof String) {
@@ -400,7 +400,7 @@ static int indexFor(int h, int length) {
 
 hashSeed 默认值是0，也就是默认关闭，任何数字与0异或不变。hashSeed 会在capacity发生变化的时候，通过initHashSeedAsNeeded()函数进行计算。当capacity大于设置值Holder.ALTERNATIVE_HASHING_THRESHOLD后，会通过sun.misc.Hashing.randomHashSeed产生hashSeed 值，这个设定值是通过 JVM的jdk.map.althashing.threshold参数来设置的，具体代码如下：
 
-```
+```java
 final boolean initHashSeedAsNeeded(int capacity) {
     boolean currentAltHashing = hashSeed != 0;
     boolean useAltHashing = sun.misc.VM.isBooted() &&
@@ -453,7 +453,7 @@ private static class Holder {
 
 JKD7 的put相比于 JDK8就要简单一些，碰撞以后只有链表结构。具体代码如下：
 
-```
+```java
 public V put(K key, V value) {
     // 初始化
     if (table == EMPTY_TABLE) {

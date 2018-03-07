@@ -1,26 +1,32 @@
+[TOC]
+
+
+
+# TDDL、Amoeba、Cobar、MyCAT架构比较-image-201710191421
+
 布式[数据库](http://lib.csdn.net/base/mysql)中间件TDDL、Amoeba、Cobar、MyCAT[架构](http://lib.csdn.net/base/architecture)比较分
 
 > 比较了业界流行的[MySQL](http://lib.csdn.net/base/mysql)分布式数据库中间件，关于每个产品的介绍，网上的资料比较多，本文只是对几款产品的架构进行比较，从中可以看出中间件发展和演进路线
 
-# 框架比较
+## 框架比较
 
-## TDDL
+### TDDL
 
 ![分布式数据库中间层TDDL](image-201710191421/20150423104902537)
 
-## Amoeba
+### Amoeba
 
 ![分布式数据库中间件Amoeba](image-201710191421/20150423104803484)
 
-## Cobar
+### Cobar
 
 ![分布式数据库中间件Cobar](image-201710191421/20150423104938323)
 
-## MyCat
+### MyCat
 
 ![分布式数据库中间件MyCat](image-201710191421/20150423104958011)
 
-## 点评
+### 点评
 
 1. TDDL不同于其它几款产品，并非独立的中间件，只能算作中间层，是以Jar包方式提供给应用调用。属于JDBC Shard的思想，网上也有很多其它类似产品。
 
@@ -48,7 +54,7 @@
 
 8. 感想：抛开TDDL不说，Amoeba、Cobar、MyCAT这三者的渊源比较深，若Amoeba能继续下去，Cobar就不会出来；若Cobar那批人不是都走光了的话，MyCAT也不会再另起炉灶。所以说，在中国开源的项目很多，但是能坚持下去的非常难，MyCAT社区现在非常活跃，也真是一件蛮难得的事。
 
-# 其它资料
+## 其它资料
 
 这个博客把几款产品的资料汇总在一起，倒也省得大家在网上到处搜了。 
 mysql中间件研究(Atlas，cobar，TDDL，mycat，heisenberg,Oceanus,vitess) 

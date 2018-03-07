@@ -1,3 +1,9 @@
+[TOC]
+
+
+
+# 使用Druid监控SQL执行状态-image-201710191411
+
 本文使用Druid的连接池替换掉原来的C3P0连接池，然后配置Druid的相关属性，完成对Spring web工程的JDBC监控。
 
 > 其实，我采用Druid替换其它连接池，最关键的一个理由是**Druid有对SQL执行的监控统计功能**。 :)

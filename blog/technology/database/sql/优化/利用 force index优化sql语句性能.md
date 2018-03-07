@@ -2,7 +2,7 @@
 
 ​    今天写了一个统计sql，在一个近亿条数据的表上执行，200s都查不出结果。SQL如下：
 
-```
+```sql
 select customer,count(1) c  
 from upv_**  
 where created between "2015-07-06" and "2015-07-07"  

@@ -1,4 +1,6 @@
-# [查找（二）简单清晰的B树、Trie树详解](http://blog.csdn.net/yang_yulei/article/details/26104921)
+[TOC]
+
+# 查找（二）简单清晰的B树、Trie树详解
 
 查找（二）
 

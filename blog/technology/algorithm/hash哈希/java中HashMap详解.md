@@ -1,4 +1,8 @@
-# [java中HashMap详解](http://alex09.iteye.com/blog/539545)
+[TOC]
+
+
+
+# java中HashMap详解
 
 
 

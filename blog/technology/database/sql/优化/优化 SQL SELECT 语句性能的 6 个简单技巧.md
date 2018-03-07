@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # 优化 SQL SELECT 语句性能的 6 个简单技巧
 
 分类: database

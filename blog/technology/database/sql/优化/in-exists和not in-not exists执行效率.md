@@ -1,12 +1,8 @@
+[TOC]
+
+
+
 # in/exists和not in/not exists执行效率
-
-发表于 [2011 年 12 月 16 日](http://www.xifenfei.com/2011/12/inexists%e5%92%8cnot-innot-exists%e6%89%a7%e8%a1%8c%e6%95%88%e7%8e%87.html) 由 [惜分飞](http://www.xifenfei.com/author/xifenfei)
-
-
-
-标题：[in/exists和not in/not exists执行效率](http://www.xifenfei.com/2011/12/inexists%e5%92%8cnot-innot-exists%e6%89%a7%e8%a1%8c%e6%95%88%e7%8e%87.html)
-
-作者：[惜分飞](http://www.xifenfei.com/)©版权所有[未经本人同意,请不得以任何形式转载,否则有进一步追究法律责任的权利.]
 
 ## **一、IN 与EXISTS**
 
@@ -17,6 +13,16 @@ SELECT * FROM T1 WHERE X IN (SELECT Y FROM T2)
 SELECT * FROM T1, (SELECT DISTINCT Y FROM T2) T2 WHERE T1.X = T2.Y
 从这里可以看出，IN需要先处理T2表，然后再和T1进行关联
 EXISTS的执行流程
+
+```sql
+SELECT * FROM T1 WHERE EXISTS (SELECT NULL FROM T2 WHERE Y = X)
+--可以理解为：
+for x in ( select * from t1 ) LOOP
+    if ( exists ( select null from t2 where y = x.x )THEN
+        OUTPUT THE RECORD
+    end if
+end loop
+```
 
 从这里看出，EXISXTS会先查询T1表，然后再LOOP处理T2表
 **2、结论**

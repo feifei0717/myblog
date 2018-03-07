@@ -1,6 +1,8 @@
-# [提高SQL查询效率](http://www.cnblogs.com/hlxs/archive/2012/05/07/2487082.html)
+[TOC]
 
-**转载：http://panyi5202.iteye.com/blog/612414**
+
+
+# 提高SQL查询效率
 
 1.对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。 
 
@@ -92,10 +94,8 @@ select num from a where exists(select 1 from b where num=a.num)
 
 30.尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理
 
-[我的博客目录](http://www.cnblogs.com/hlxs/archive/2013/02/20/2918344.html)
 
-分类: [SQL Server](http://www.cnblogs.com/hlxs/category/306421.html)
 
-来源： <<http://www.cnblogs.com/hlxs/archive/2012/05/07/2487082.html>>
+来源： http://www.cnblogs.com/hlxs/archive/2012/05/07/2487082.html
 
  

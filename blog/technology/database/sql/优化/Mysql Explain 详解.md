@@ -1,4 +1,8 @@
-Mysql Explain 详解
+[TOC]
+
+
+
+# mysql Explain 详解
 
 ## 一.语法
 
@@ -218,7 +222,7 @@ mysql> explain select * from (select * from ( select * from t3 where id=3952602)
 
 这列很重要,显示了连接使用了哪种类别,有无使用索引.
 
-从最好到最差的连接类型为const、eq_reg、ref、range、indexhe和ALL 
+从最好到最差的连接类型为const、eq_reg、ref、range、index和ALL 
 
 #### (1).system
 

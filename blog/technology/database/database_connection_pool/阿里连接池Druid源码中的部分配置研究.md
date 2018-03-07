@@ -1,6 +1,8 @@
-# 阿里连接池Druid源码中的部分配置研究
+[TOC]
 
-[Techzero](https://www.techzero.cn/author/admin/) • 2016-02-14 • [Java](https://www.techzero.cn/technology/dev/java/) • 2,972 次阅读 • [发表评论](https://www.techzero.cn/alibaba-druid-datasource-source-study-part-of-properties.html#respond)
+
+
+# 阿里连接池Druid源码中的部分配置研究
 
 ## **Druid是一个JDBC组件，它包括三部分：**
 
@@ -47,7 +49,7 @@
 
 配置项中指定了各个参数后，在连接池内部是这么使用这些参数的。数据库连接池在初始化的时候会创建initialSize个连接，当有数据库操作时，会从池中取出一个连接。如果当前池中正在使用的连接数等于maxActive，则会等待一段时间，等待其他操作释放掉某一个连接，如果这个等待时间超过了maxWait，则会报错；如果当前正在使用的连接数没有达到maxActive，则判断当前是否有空闲连接，如果有则直接使用空闲连接，如果没有则新建立一个连接。在连接使用完毕后，不是将其物理连接关闭，而是将其放入池中等待其他操作复用。
 
-```
+```java
     public DruidPooledConnection getConnection(long maxWaitMillis) throws SQLException {
         init();
 
@@ -127,7 +129,7 @@
 
 同时连接池内部有机制判断，如果当前的总的连接数少于minIdle，则会建立新的空闲连接，以保证连接数达到minIdle。以上源码可以看出，当testWhileIdle参数为true时，在获取连接时将对得到的连接进行检测，如果空闲时间大于timeBetweenEvictionRunsMillis，则执行validationQuery验证连接是否有效。
 
-```
+```java
     public class DestroyConnectionThread extends Thread {
         public DestroyConnectionThread(String name){
             super(name);
@@ -299,7 +301,7 @@
 
 以上源码可以看出每隔timeBetweenEvictionRunsMillis进行一次shrink（连接池大小收缩）检测，如果当前连接池中的连接数量大于minIdle，则对超出minIdle的较早的连接进行空闲时间检测，如果某个连接在空闲了minEvictableIdleTimeMillis时间后仍然没有使用，则被物理性的关闭掉。除了定时检测空闲连接以外，Druid还有一个removeAbandoned机制，如果removeAbandoned为true，则在执行shrink后执行removeAbandoned()，如果某个连接从被连接到当前时间超过removeAbandonedTimeoutMillis，则无论是否被使用都被强制物理性的关闭掉，同时将该连接的abandoned设置为true。
 
-```
+```java
     public int getTransactionQueryTimeout() {
         if (transactionQueryTimeout <= 0) {
             return queryTimeout;
