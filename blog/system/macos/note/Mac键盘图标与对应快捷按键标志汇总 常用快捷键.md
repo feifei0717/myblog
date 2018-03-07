@@ -1,4 +1,4 @@
-# Mac键盘图标与对应快捷按键标志汇总
+# Mac键盘图标与对应快捷按键标志汇总 常用快捷键
 
 
 
@@ -48,6 +48,7 @@ fn——功能键就是fn
 - Command Shift S 另存为….（部分程序适用） 
 - Command H 隐藏当前程序（Boss Key） 
 - Command Option H 隐藏所有后台程序 
+- Command Option H M 隐藏所有程序
 - Control Shift 光盘推出键黑屏（没有Boss Key好用，一动就亮） 
 - Command P 打印 
 - Command Shift P 页面设置 

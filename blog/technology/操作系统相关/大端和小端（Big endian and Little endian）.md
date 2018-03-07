@@ -1,6 +1,8 @@
-随笔 - 146  文章 - 0  评论 - 661
+[TOC]
 
-# [大端和小端（Big endian and Little endian）](http://www.cnblogs.com/luxiaoxun/archive/2012/09/05/2671697.html)
+
+
+# 大端和小端（Big endian and Little endian）
 
 ## **一、大端和小端的问题**
 
@@ -45,7 +47,7 @@ Big-Endian转换成Little-Endian
 
 C程序：
 
-```
+```c
     int i = 1;   
     char *p = (char *)&i;   
     if(*p == 1)     
@@ -58,7 +60,7 @@ C程序：
 
 　　联合体union的存放顺序是所有成员都从低地址开始存放，利用该特性就可以轻松地获得了CPU对内存采用Little-endian还是Big-endian模式读写。
 
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 ```
 /*return 1: little-endian, return 0: big-endian*/
@@ -74,7 +76,7 @@ int checkCPUendian()
 }
 ```
 
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 实现同样的功能，来看看Linux 操作系统中相关的源代码是怎么做的：
 
@@ -111,8 +113,6 @@ Linux 的内核作者们仅仅用一个union 变量和一个简单的宏定义�
 intel处理器是0x78 0x56 0x34 0x12这样来存储的，称为小尾little-endian
 在x86环境下题目中的p指向0x78，加1后指向0x56
 
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 ```
 #include <stdio.h>
 union
@@ -129,11 +129,7 @@ int main()
 }
 ```
 
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 x86下输出答案： 266 （x86下：低位低地址，高位高地址，i内存里存的值是Ox010A，十进制为266）
-
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
 ```
 int main()
@@ -156,8 +152,6 @@ int main()
 }
 ```
 
-[![复制代码](http://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 x86下输出答案：
 ​       A B   (0x41对应'A',是低位；Ox42对应'B',是高位）
 ​       6261 (number.i和number.half共用一块地址空间0x6261）
@@ -166,8 +160,4 @@ x86下输出答案：
 
  
 
-作者：[阿凡卢](http://www.cnblogs.com/luxiaoxun/)
-
-出处：<http://www.cnblogs.com/luxiaoxun/>
-
-本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。
+http://www.cnblogs.com/luxiaoxun/archive/2012/09/05/2671697.html

@@ -1,6 +1,12 @@
-# [关于hashCode,你一定听说过会重复，那么你见过2个不同的字符串hashCode值却是相同的吗](http://blog.csdn.net/hl_java/article/details/71511815)
+[TOC]
 
 
+
+# 2个不同的字符串hashCode值相同示例
+
+## 前言
+
+关于hashCode,你一定听说过会重复，那么你见过2个不同的字符串hashCode值却是相同的吗
 
 ## 相同的例子
 
@@ -32,13 +38,17 @@ Stringb="BB";
 
 ## 4个知识点：
 
-1.java中所有的对象都有一个父类Object,而Object类都有hashCode方法，也就是说java中所有的类均会有hashCode方法；
-2.Object类的hashCode方法是native的，即是通用[C语言](http://lib.csdn.net/base/c)来写的，本文举例使用的是String类，自己重写了hashCode方法，算法即如下：
-String.hashCode()=str.charAt(0) * 31n-1 + str.charAt(1) * 31n-2 + ... + str.charAt(n-1)
-3.String类的hashCode算法是固定的，根据算法就可以看到是可能会存在相同hashCode的
-4.再强调一点，两个String的hashCode相同并不代表着equals比较时会相等，他们两者之间是没有必然关系，这一点可以看看equals方法的实现
+1. java中所有的对象都有一个父类Object,而Object类都有hashCode方法，也就是说java中所有的类均会有hashCode方法；
 
-```
+2. Object类的hashCode方法是native的，即是通用[C语言](http://lib.csdn.net/base/c)来写的，本文举例使用的是String类，自己重写了hashCode方法，算法即如下：
+
+   String.hashCode()=str.charAt(0) * 31n-1 + str.charAt(1) * 31n-2 + ... + str.charAt(n-1)
+
+3. String类的hashCode算法是固定的，根据算法就可以看到是可能会存在相同hashCode的
+
+4. 再强调一点，两个String的hashCode相同并不代表着equals比较时会相等，他们两者之间是没有必然关系，这一点可以看看equals方法的实现
+
+```java
     /**
      * Compares this string to the specified object.  The result is {@code
      * true} if and only if the argument is not {@code null} and is a {@code
@@ -76,3 +86,10 @@ String.hashCode()=str.charAt(0) * 31n-1 + str.charAt(1) * 31n-2 + ... + str.char
         return false;
     }
 ```
+
+
+
+
+
+
+http://blog.csdn.net/hl_java/article/details/71511815

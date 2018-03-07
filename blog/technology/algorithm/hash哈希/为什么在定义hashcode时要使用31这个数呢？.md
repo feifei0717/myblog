@@ -1,8 +1,12 @@
+[TOC]
+
+
+
 # 为什么在定义hashcode时要使用31这个数呢
 
 散列计算就是计算元素应该放在数组的哪个元素里。准确的说是放到哪个链表里面。按照Java的规则，如果你要想将一个对象放入HashMap中，你的对象的类必须提供hashcode方法，返回一个整数值。比如String类就有如下方法：
 
-```
+```java
 public int hashCode() {  
         int h = hash;  
         int len = count;  
@@ -23,7 +27,7 @@ public int hashCode() {
 
 a*31^4+b*31^3+c*31^2+d*31^1+e*31^0.注意，这里的a,b,c,d或者e指的是它们的ASCII值。很有趣的循环，居然可以用来算N进制。这个循环可以抽出来单独作为计算进制的好工具：
 
-```
+```java
 public static void main(String[] args) {  
         int[] a={1,0};  
         System.out.println(calculate(2,a));  

@@ -1,6 +1,8 @@
-# 常见hash算法的原理
+[TOC]
 
-原文出处： [mengfanrong](http://www.cnblogs.com/mengfanrong/p/4034950.html)   
+
+
+# 常见hash算法的原理
 
 ## 介绍
 
@@ -269,7 +271,7 @@ return hash;
 
 查表Hash中有名的样例有：Universal Hashing和Zobrist Hashing。他们的表格都是随机生成的。
 
-**六 混合Hash**
+### **六 混合Hash**
 
 混合Hash算法利用了以上各种方式。各种常见的Hash算法，比方MD5、Tiger都属于这个范围。它们一般非常少在面向查找的Hash函数里面使用。
 
@@ -279,7 +281,7 @@ return hash;
 
 \1. 字符串的Hash。最简单能够使用主要的乘法Hash，当乘数为33时，对于英文单词有非常好的散列效果（小于6个的小写形式能够保证没有冲突）。复杂一点能够使用FNV算法（及其改进形式），它对于比較长的字符串，在速度和效果上都不错。
 
-```
+```java
 public override unsafe int GetHashCode()
 {//微软System.String 字符串哈希算法
     fixed (char* str= ((char*) this))
@@ -304,3 +306,9 @@ public override unsafe int GetHashCode()
 ```
 
 \2. 长数组的Hash。能够使用<http://burtleburtle.net/bob/c/lookup3.c>这样的算法，它一次运算多个字节，速度还算不错。
+
+
+
+
+
+http://www.cnblogs.com/mengfanrong/p/4034950.html

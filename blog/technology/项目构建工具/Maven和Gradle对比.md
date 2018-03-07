@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Maven和Gradle对比
 
 FEB 23RD, 2016 | [COMMENTS](http://www.huangbowen.net/blog/2016/02/23/gradle-vs-maven/#disqus_thread)
@@ -8,7 +12,7 @@ Java世界中主要有三大构建工具：Ant、Maven和Gradle。经过几年�
 
 Maven为Java世界引入了一个新的依赖管理系统。在Java世界中，可以用groupId、artifactId、version组成的Coordination（坐标）唯一标识一个依赖。任何基于Maven构建的项目自身也必须定义这三项属性，生成的包可以是Jar包，也可以是war包或者ear包。一个典型的依赖引用如下所示：
 
-```
+```xml
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -100,7 +104,7 @@ Gradle也沿用了这一标准的目录结构。如果你在Gradle项目中使�
 
 Maven和Gradle设计时都采用了插件机制。但显然Gradle更胜一筹。主要原因在于Maven是基于XML进行配置。所以其配置语法太受限于XML。即使实现很小的功能都需要设计一个插件，建立其与XML配置的关联。比如想在Maven中执行一条shell命令，其配置如下：
 
-```
+```xml
 <plugin>
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>exec-maven-plugin</artifactId>
