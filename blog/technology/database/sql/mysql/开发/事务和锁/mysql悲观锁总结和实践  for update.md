@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # mysql悲观锁总结和实践  for update
 
 
@@ -6,13 +10,15 @@
 
  
 
-**悲观锁介绍（百科）：**
+## **悲观锁介绍（百科）：**
 
 悲观锁，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度，因此，在整个数据处理过程中，将数据处于锁定状态。悲观锁的实现，往往依靠数据库提供的锁机制（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。
 
  
 
-**使用场景举例**：以MySQL InnoDB为例
+## **使用场景举例**：
+
+以MySQL InnoDB为例
 
 商品goods表中有一个字段status，status为1代表商品未被下单，status为2代表商品已经被下单，那么我们对某个商品下单时必须确保该商品status为1。假设商品的id为1。
 
@@ -106,7 +112,7 @@ commit;/commit work;
 
 数据库表t_goods，包括id,status,name三个字段，id为主键，数据库中记录如下;
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.18255454523435644.png)]()
+Sql代码  
 
 1. mysql> select * from t_goods;  
 2. +----+--------+------+  
@@ -116,7 +122,7 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.18
 6. |  2 |      1 | 装备 |  
 7. +----+--------+------+  
 8. 2 rows in set  
-9.   
+9.   ​
 10. mysql>  
 
 注：为了测试数据库锁，我使用两个console来模拟不同的事务操作，分别用console1、console2来表示。 
@@ -127,7 +133,7 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.18
 
 console1：查询出结果，但是把该条数据锁定了
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.9847707124614256.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id=1 for update;  
 2. +----+--------+------+  
@@ -136,47 +142,47 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.98
 5. |  1 |      1 | 道具 |  
 6. +----+--------+------+  
 7. 1 row in set  
-8.   
+8.   ​
 9. mysql>  
 
 console2：查询被阻塞
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.25672794796103826.png)]()
+Sql代码  
 
 1. mysql> select * from t_goods where id=1 for update;  
 
 console2：如果console1长时间未提交，则会报错
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.7250486478241274.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id=1 for update;  
 2. ERROR 1205 : Lock wait timeout exceeded; try restarting transaction  
 
- 
+
 
 **例2: (明确指定主键，若查无此数据，无lock)**
 
 console1：查询结果为空
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.877256884694259.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id=3 for update;  
 2. Empty set  
 
 console2：查询结果为空，查询无阻塞，说明console1没有对数据执行锁定
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.022135099982296902.png)]()
+Sql代码  
 
 1. mysql> select * from t_goods where id=3 for update;  
 2. Empty set  
 
- 
+
 
 **例3: (无主键，table lock)**
 
 console1：查询name=道具 的数据，查询正常
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.0011376614842641963.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where name='道具' for update;  
 2. +----+--------+------+  
@@ -185,33 +191,33 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.00
 5. |  1 |      1 | 道具 |  
 6. +----+--------+------+  
 7. 1 row in set  
-8.   
+8.   ​
 9. mysql>  
 
 console2：查询name=装备 的数据，查询阻塞，说明console1把表给锁住了
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.31144157493263025.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where name='装备' for update;  
 
 console2：若console1长时间未提交，则查询返回为空
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.6685018130159992.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where name='装备' for update;  
 2. Query OK, -1 rows affected  
 
- 
+
 
 **例4: (主键不明确，table lock)**
 
 console1：查询正常
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.6254125024801556.png)]()
+Sql代码   
 
 1. mysql> begin;  
 2. Query OK, 0 rows affected  
-3.   
+3.   ​
 4. mysql> select * from t_goods where id>0 for update;  
 5. +----+--------+------+  
 6. | id | status | name |  
@@ -220,26 +226,26 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.62
 9. |  2 |      1 | 装备 |  
 10. +----+--------+------+  
 11. 2 rows in set  
-12.   
+12.   ​
 13. mysql>  
 
 console2：查询被阻塞，说明console1把表给锁住了
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.5579849013154439.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id>1 for update;  
 
- 
+
 
 **例5: (主键不明确，table lock)**
 
 console1：
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.5141772527251223.png)]()
+Sql代码   
 
 1. mysql> begin;  
 2. Query OK, 0 rows affected  
-3.   
+3.   ​
 4. mysql> select * from t_goods where id<>1 for update;  
 5. +----+--------+------+  
 6. | id | status | name |  
@@ -247,25 +253,25 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.51
 8. |  2 |      1 | 装备 |  
 9. +----+--------+------+  
 10. 1 row in set  
-11.   
+11.   ​
 12. mysql>  
 
 console2：查询被阻塞，说明console1把表给锁住了
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.3646470659352532.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id<>2 for update;  
 
 console1：提交事务
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.7455539915357636.png)]()
+Sql代码  
 
 1. mysql> commit;  
 2. Query OK, 0 rows affected  
 
 console2：console1事务提交后，console2查询结果正常
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.6242840095921374.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where id<>2 for update;  
 2. +----+--------+------+  
@@ -274,10 +280,10 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.62
 5. |  1 |      1 | 道具 |  
 6. +----+--------+------+  
 7. 1 row in set  
-8.   
+8.   ​
 9. mysql>  
 
- 
+
 
 以上就是关于数据库主键对MySQL锁级别的影响实例，需要注意的是，除了主键外，使用索引也会影响数据库的锁定级别
 
@@ -289,7 +295,7 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.62
 
 修改id为2的数据的status为2，此时表中数据为：
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.4377855993433384.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods;  
 2. +----+--------+------+  
@@ -299,16 +305,16 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.43
 6. |  2 |      2 | 装备 |  
 7. +----+--------+------+  
 8. 2 rows in set  
-9.   
+9.   ​
 10. mysql>  
 
- 
+
 
 **例6: (明确指定索引，并且有此数据，row lock)**
 
 console1：
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.0792204907476215.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where status=1 for update;  
 2. +----+--------+------+  
@@ -317,19 +323,19 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.07
 5. |  1 |      1 | 道具 |  
 6. +----+--------+------+  
 7. 1 row in set  
-8.   
+8.   ​
 9. mysql>  
 
 console2：查询status=1的数据时阻塞，超时后返回为空，说明数据被console1锁定了
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.4495369974889303.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where status=1 for update;  
 2. Query OK, -1 rows affected  
 
 console2：查询status=2的数据，能正常查询，说明console1只锁住了行，未锁表
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.4642189689564482.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where status=2 for update;  
 2. +----+--------+------+  
@@ -338,30 +344,30 @@ Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.46
 5. |  2 |      2 | 装备 |  
 6. +----+--------+------+  
 7. 1 row in set  
-8.   
+8.   ​
 9. mysql>  
 
- 
+
 
 **例7: (明确指定索引，若查无此数据，无lock)**
 
 console1：查询status=3的数据，返回空数据
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.10582064781287359.png)]()
+Sql代码   
 
 1. mysql> select * from t_goods where status=3 for update;  
 2. Empty set  
 
 console2：查询status=3的数据，返回空数据
 
-Sql代码  [![收藏代码](mysql悲观锁总结和实践  for update_files/0.7129858878827957.png)]()
+Sql代码  
 
 1. mysql> select * from t_goods where status=3 for update;  
 2. Empty set  
 
- 
 
- 
+
+
 
 以上就是关于我对数据库悲观锁的理解和总结，有不对的地方欢迎拍砖，下一次会带来[数据库乐观锁的总结和实践](http://chenzhou123520.iteye.com/blog/1863407)
 
