@@ -14,7 +14,7 @@
 *AbstractHandlerMappin*是接口HandlerMapping的抽象实现，它是一个模板方法，子类通过模板方法提供些初始值或具体的[算法](http://lib.csdn.net/base/datastructure)即可。以前的源代码阅读也能发现[spring](http://lib.csdn.net/base/javaee)的组件都是采用这样的模式。 
 *AbstractHandlerMappig*继承了 WebApplicationObjectSupport，初始化代码在initApplicationContext，代码如下：
 
-```
+```java
 protected void initApplicationContext() throws BeansException {
     extendInterceptors(this.interceptors);
     detectMappedInterceptors(this.adaptedInterceptors);
@@ -29,7 +29,7 @@ protected void initApplicationContext() throws BeansException {
 
 接下来看一下它实现的gethandler方法：
 
-```
+```java
 public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
     //尝试调用子类的getHandlerInternal获得handler
     Object handler = getHandlerInternal(request);
