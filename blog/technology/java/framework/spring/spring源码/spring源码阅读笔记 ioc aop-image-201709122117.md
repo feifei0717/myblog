@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # spring源码阅读笔记-image-201709122117.md
 
 ## spring ioc 容器
@@ -188,7 +192,7 @@ AnnotationTransactionAttributeSource(注解事务匹配)
 
 InfrastructureAdvisorAutoProxyCreator.postProcessAfterInitialization 来创建代理，在它的AbstractAutoProxyCreator抽象类中
 
-```
+```java
 	/**
 	 * Create an AOP proxy for the given bean.
 	 * @param beanClass the class of the bean
