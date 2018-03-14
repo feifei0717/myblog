@@ -37,6 +37,7 @@ fn——功能键就是fn
 - Command A 全选 
 - Command C 拷贝 
 - Command V 粘贴 
+- command+option+v 剪切
 - Command X 文字剪切（不支持文件剪切） 
 - Command ，偏好设置 
 - Command W 关闭当前窗口 
