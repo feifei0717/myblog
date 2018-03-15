@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # 在Dubbo中使用高效的Java序列化（Kryo和FST）
 
 **作者：沈理**
@@ -194,7 +198,7 @@ double[]
 | Json                | 657   | 409   |
 | Java Serialization  | 963   | 630   |
 
-[![no image found](在Dubbo中使用高效的Java序列化（Kryo和FST）_files/0.8700930421871609.png)](https://dangdangdotcom.github.io/dubbox/images/bytes.png)
+[![no image found](image-201803151443/0.8700930421871609.png)](https://dangdangdotcom.github.io/dubbox/images/bytes.png)
 
 ### Dubbo RPC中不同序列化响应时间和吞吐量对比
 
@@ -212,9 +216,9 @@ double[]
 | Dubbo: hessian2            | 1.49   | 6701         |
 | Dubbo: fastjson            | 1.572  | 6352         |
 
-[![no image found](在Dubbo中使用高效的Java序列化（Kryo和FST）_files/0.8939703692513314.png)](https://dangdangdotcom.github.io/dubbox/images/rt.png)
+[![no image found](image-201803151443/0.8939703692513314.png)](https://dangdangdotcom.github.io/dubbox/images/rt.png)
 
-[![no image found](在Dubbo中使用高效的Java序列化（Kryo和FST）_files/0.6112122371786295.png)](https://dangdangdotcom.github.io/dubbox/images/tps.png)
+[![no image found](image-201803151443/0.6112122371786295.png)](https://dangdangdotcom.github.io/dubbox/images/tps.png)
 
 ### 测试总结
 
