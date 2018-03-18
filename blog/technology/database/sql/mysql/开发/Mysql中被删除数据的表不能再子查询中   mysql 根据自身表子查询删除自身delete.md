@@ -22,6 +22,16 @@ delete from demo orer by grade asc limit 0,3;
 
 Mysql中被删除数据的表不能再子查询中，必须多嵌套一层，请注意
 
-```
- DELETE from period_generic_rule WHERE biz_code in ( 	select tmp.biz_code from (		SELECT b.biz_code FROM  icon_sku_whg a,period_generic_rule b WHERE		a.sku_seq = b.biz_code and import_type = '2' AND  a.islifeexpired = '1'	) tmp   ); 
+```sql
+DELETE FROM period_generic_rule
+WHERE biz_code IN (
+		SELECT tmp.biz_code
+		FROM (
+			SELECT b.biz_code
+			FROM icon_sku_whg a, period_generic_rule b
+			WHERE a.sku_seq = b.biz_code
+				AND import_type = '2'
+				AND a.islifeexpired = '1'
+		) tmp
+	);
 ```
