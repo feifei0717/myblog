@@ -1,17 +1,3 @@
-# myblog
-
-博客,记录学习技术和平时遇到的问题.
-
-
-github地址：https://github.com/nowisjerry/myblog
-
-coding地址：https://coding.net/u/jerry_ye/p/myblog/git
-
-
-
-文章名称目录:
-
-```
 .
 └── blog
     ├── software
@@ -266,6 +252,3 @@ coding地址：https://coding.net/u/jerry_ye/p/myblog/git
     └── 电子导购
 
 251 directories
-
-```
-
