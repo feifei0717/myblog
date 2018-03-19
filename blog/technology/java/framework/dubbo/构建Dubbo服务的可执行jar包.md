@@ -23,7 +23,7 @@
 
   ​
 
-  ```
+  ```java
   @RunWith(SpringJUnit4ClassRunner.class)
   @ContextConfiguration(locations = "classpath:spring/spring-context.xml")
   public class DubboProvider {
@@ -48,7 +48,7 @@
 
   ​
 
-  ```
+  ```java
   public class DubboProvider {	
   	private static final Log log = LogFactory.getLog(DubboProvider.class);
   	public static void main(String[] args) {
@@ -88,9 +88,7 @@
 
   - 设置优雅停机超时时间，缺省超时时间是10秒：(超时则强制关剂机)
 
-    ​
-
-    ```
+    ```xml
     <dubbo:application ...>
         <dubbo:parameter key="shutdown.timeout" value="60000" /> <!-- 单位毫秒 -->
     </dubbo:application>
@@ -98,9 +96,7 @@
 
   - 如果ShutdownHook不能生效，可以自行调用：
 
-    ​
-
-    ```
+    ```java
     ProtocolConfig.destroyAll();
     ```
 
@@ -116,7 +112,7 @@
 
   - 在build的resources增加(注意：发现resource没有继承，待研究)
 
-    ```
+    ```xml
     <!-- 把配置复制到加载的目录   Spring Container自动加载META-INF/spring目录下的所有Spring配置 -->
     <resource>
     	<targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
@@ -130,7 +126,7 @@
 
   - 在build的plugins增加
 
-    ```
+    ```xml
     <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -182,7 +178,7 @@
 
   - 修改Spring的配置文件(例如：spring-context.xml)，修改其中的import路径：
 
-    ```
+    ```xml
     <import resource="classptah:spring/spring-mybatis.xml" />
     <import resource="classptah:spring/dubbo-provider.xml" />
     ```
