@@ -58,7 +58,17 @@ SLF4J装载了一个叫*log4j-over-slf4j*的模块。它允许log4j用户转移�
 
 *slf4j-log4j12.jar*是给SLF4J提供log4j绑定，这将迫使所有的SLF4J的调用分配给log4j。*log4j-over-slf4j.jar*将反过来讲所有的log4J API调用分配给SLF4J等效的方法。如果二者同时存在，SLF4J调用将分发给log4j, 同时log4j调用重定向到SLF4J，导致进入一个[死循环](http://www.slf4j.org/codes.html#log4jDelegationLoop) 。
 
- 
+
+
+```
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>log4j-over-slf4j</artifactId>
+    <version>1.7.25</version>
+</dependency>
+```
+
+
 
 ## jul-to-slf4j bridge（jul到slf4j桥接）
 
