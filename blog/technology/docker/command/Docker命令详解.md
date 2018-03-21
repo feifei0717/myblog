@@ -1,4 +1,4 @@
-[toc]
+[TOC]
 # **Docker命令详解**
 
 具体最详细还是查看官网文档： https://docs.docker.com/engine/reference/commandline/commit/#commit-a-container
@@ -300,17 +300,22 @@ stats     Display a live stream of container(s) resource usage statistics       
 ### run
 
 ```sh
-    run       Run a command in a new container   
-              --让创建的容器立刻进入运行状态，该命令等同于docker create创建容器后再使用docker start启动容器
-              例如运行mysql为例：docker run --name=mysqlserver -d -i -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql 
-              命令参数说明
-                               --name 给容器起一个别名，可选，如果不指定，则Docker会自动生成不规则的字符串表示
-                               -i 指定容器可以交互，有了此选项后，可以使用docker attach等与容器进行交互
-                               -p 映射宿主机与容器中服务端口
-                               -e 设置容器运行所需要的环境变量
-                               -d 在后台运行容器并打印容器ID
-                               -v 一个宿主机上的目录挂载到镜像里,具体查看文章：docker run -v 挂载本地目录
-                               --tty , -t		分配一个伪TTY
+Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+Run a command in a new container 在新的容器中运行一个命令
+ 
+例如:
+ 运行mysql为例：docker run --name=mysqlserver -d -i -p 3306:3306 -e 	MYSQL_ROOT_PASSWORD=123456 mysql 
+              
+命令参数说明:
+ --name 给容器起一个别名，可选，如果不指定，则Docker会自动生成不规则的字符串表示
+ -i 指定容器可以交互，有了此选项后，可以使用docker attach等与容器进行交互
+ -p 映射宿主机与容器中服务端口
+ -e 设置容器运行所需要的环境变量
+ -d 在后台运行容器并打印容器ID
+ -v 一个宿主机上的目录挂载到镜像里,具体查看文章：docker run -v 挂载本地目录
+ --tty , -t		分配一个伪TTY
+ --rm 退出时自动移除容器
+ --network string	将容器连接到网络（默认“默认”）Connect a container to a network (default "default")
 ```
 
 ## 镜像管理命令：
@@ -318,8 +323,32 @@ stats     Display a live stream of container(s) resource usage statistics       
 ### build
 
 ```
- build     Build an image from a Dockerfile
-              --通过Dockerfile创建镜像
+docker build : 使用Dockerfile创建镜像。
+语法
+	docker build [OPTIONS] PATH | URL | -
+常用选项说明
+    --build-arg，设置构建时的变量
+    --no-cache，默认false。设置该选项，将不使用Build Cache构建镜像
+    --pull，默认false。设置该选项，总是尝试pull镜像的最新版本
+    --compress，默认false。设置该选项，将使用gzip压缩构建的上下文
+    --disable-content-trust，默认true。设置该选项，将对镜像进行验证
+    --file, -f，Dockerfile的完整路径，默认值为‘PATH/Dockerfile’
+    --isolation，默认--isolation="default"，即Linux命名空间；其他还有process或hyperv
+    --label，为生成的镜像设置metadata
+    --squash，默认false。设置该选项，将新构建出的多个层压缩为一个新层，但是将无法在多个镜像之间共享新层；设置该选项，实际上是创建了新image，同时保留原有image。
+    --tag, -t，镜像的名字及tag，通常name:tag或者name格式；可以在一次构建中为一个镜像设置多个tag
+    --network，默认default。设置该选项，Set the networking mode for the RUN instructions during build
+    --quiet, -q  ，默认false。设置该选项，Suppress the build output and print image ID on success
+    --force-rm，默认false。设置该选项，总是删除掉中间环节的容器
+    --rm，默认--rm=true，即整个构建过程成功后删除中间环节的容器
+实例
+	-f :指定要使用的Dockerfile路径；  -f ../Dockerfile.php 参数指定某个文件作为 Dockerfile
+
+    使用当前目录的Dockerfile创建镜像。
+    docker build -t runoob/ubuntu:v1 . 
+
+    使用URL github.com/creack/docker-firefox 的 Dockerfile 创建镜像。
+    docker build github.com/creack/docker-firefox
 ```
 
 ### commit
