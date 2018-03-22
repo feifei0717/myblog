@@ -302,7 +302,7 @@ stats     Display a live stream of container(s) resource usage statistics       
 ```sh
 Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 Run a command in a new container 在新的容器中运行一个命令
- 
+
 例如:
  运行mysql为例：docker run --name=mysqlserver -d -i -p 3306:3306 -e 	MYSQL_ROOT_PASSWORD=123456 mysql 
               
@@ -322,7 +322,7 @@ Run a command in a new container 在新的容器中运行一个命令
 
 ### build
 
-```
+```sh
 docker build : 使用Dockerfile创建镜像。
 语法
 	docker build [OPTIONS] PATH | URL | -
