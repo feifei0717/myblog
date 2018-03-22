@@ -1,5 +1,7 @@
  
 
+[TOC]
+
 
 
 # Python包管理工具——Pip
@@ -19,63 +21,55 @@
 
 ### 2.1 脚本安装pip
 
-> ```
-> $ curl -O https://bootstrap.pypa.io/get-pip.py
->
-> $ python get-pip.py
->
-> ```
+```
+$ curl -O https://bootstrap.pypa.io/get-pip.py
+$ python get-pip.py
+```
 
 ### 2.2 使用包管理软件安装
 
-> ```
-> $ sudo yum install python-pip
->
-> $ sudo apt-get install python-pip
->
-> ```
+```
+$ sudo yum install python-pip
+$ sudo apt-get install python-pip
+```
 
 ### 2.3 更新pip
 
-> ```
-> $ pip install -U pip
->
-> ```
+```
+$ pip install -U pip
+```
 
 ## 3 pip基本使用
 
 ### 3.1 安装PyPI软件
 
-> ```
-> $ pip install SomePackage
->
->   [...]
->   Successfully installed SomePackage
->
-> ```
+```
+$ pip install SomePackage
+
+  [...]
+  Successfully installed SomePackage
+```
 
 ### 3.2 查看具体安装文件
 
-> ```
-> $ pip show --files SomePackage
->
->   Name: SomePackage
->   Version: 1.0
->   Location: /my/env/lib/pythonx.x/site-packages
->   Files:
->    ../somepackage/__init__.py
->    [...]
->
-> ```
+```
+$ pip show --files SomePackage
+
+  Name: SomePackage
+  Version: 1.0
+  Location: /my/env/lib/pythonx.x/site-packages
+  Files:
+   ../somepackage/__init__.py
+   [...]
+```
 
 ### 3.3 查看哪些软件需要更新
 
-> ```
-> $ pip list --outdated
->
->   SomePackage (Current: 1.0 Latest: 2.0)
->
-> ```
+```
+$ pip list --outdated
+
+  SomePackage (Current: 1.0 Latest: 2.0)
+```
 
 ### 3.4 升级软件包
 

@@ -146,18 +146,20 @@ events    Get real time events from the server
 ### exec
 
 ```
-  exec      Run a command in a running container
+exec      Run a command in a running container
               --用于容器启动之后，执行其它的任务
-              通过exec命令可以创建两种任务：后台型任务和交互型任务
-              后台型任务：docker exec -d cc touch 123  其中cc是容器名
-              交互型任务：
-              [root@localhost ~]# docker exec -i -t cc /bin/bash
-              root@1e5bb46d801b:/# ls
-              123  bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-              OPTIONS说明：
--d :分离模式: 在后台运行
-          -i :即使没有附加也保持STDIN 打开
--t :分配一个伪终端
+              
+    通过exec命令可以创建两种任务：后台型任务和交互型任务
+    后台型任务：docker exec -d cc touch 123  其中cc是容器名
+    交互型任务：
+    [root@localhost ~]# docker exec -i -t cc /bin/bash
+    root@1e5bb46d801b:/# ls
+    123  bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+ 	
+OPTIONS说明：
+    -d :分离模式: 在后台运行
+              -i :即使没有附加也保持STDIN 打开
+    -t :分配一个伪终端
 ```
 
 ### export
